@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b4vvqaj813jdt"]
+
+[ext_resource type="Script" uid="uid://cvfdg37ik6k0t" path="res://map/roads/cell.gd" id="1_1k0kq"]
+[ext_resource type="Texture2D" uid="uid://dl8l3vx1j3f48" path="res://icon.svg" id="2_5qxn4"]
+[ext_resource type="PackedScene" uid="uid://bq4q6xof5peoa" path="res://map/collectibles/collectible.tscn" id="2_7lt42"]
+
+[node name="Cell" type="Node2D" unique_id=189524571 node_paths=PackedStringArray("road", "overlay")]
+script = ExtResource("1_1k0kq")
+road = NodePath("Road")
+overlay = NodePath("Overlay")
+collectible_scene = ExtResource("2_7lt42")
+
+[node name="Road" type="Sprite2D" parent="." unique_id=82527359]
+
+[node name="Overlay" type="Sprite2D" parent="." unique_id=1621617596]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_5qxn4")
