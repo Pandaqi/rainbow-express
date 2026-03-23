@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjrlqv0bxw86q"
-path="res://.godot/imported/tileGrass2.png-d9298710b11a6e83377fc9e6bc55837b.ctex"
+uid="uid://bkeanrdcqa3dn"
+path="res://.godot/imported/rainbow-express-favicon.png-a05026d3258f525d66595683786c3cef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://map/roads/sprites/tileGrass2.png"
-dest_files=["res://.godot/imported/tileGrass2.png-d9298710b11a6e83377fc9e6bc55837b.ctex"]
+source_file="res://main/rainbow-express-favicon.png"
+dest_files=["res://.godot/imported/rainbow-express-favicon.png-a05026d3258f525d66595683786c3cef.ctex"]
 
 [params]
 

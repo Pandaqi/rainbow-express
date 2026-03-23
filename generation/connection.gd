@@ -1,7 +1,7 @@
 extends PuzzleConnection
 class_name Connection
 
-var truck_index := -1
+var car_index := -1
 var pickup_for := -1
 
 func has_pickup() -> bool:

@@ -1,17 +1,63 @@
 [gd_scene format=3 uid="uid://b4vvqaj813jdt"]
 
 [ext_resource type="Script" uid="uid://cvfdg37ik6k0t" path="res://map/roads/cell.gd" id="1_1k0kq"]
-[ext_resource type="Texture2D" uid="uid://dl8l3vx1j3f48" path="res://icon.svg" id="2_5qxn4"]
-[ext_resource type="PackedScene" uid="uid://bq4q6xof5peoa" path="res://map/collectibles/collectible.tscn" id="2_7lt42"]
+[ext_resource type="Texture2D" uid="uid://l4wxp2fw7jn8" path="res://map/roads/sprites/tileGrass1.png" id="3_7lt42"]
+[ext_resource type="Texture2D" uid="uid://bnq4ksagd41k4" path="res://map/collectibles/map-marker-tintable.png" id="4_7lt42"]
 
-[node name="Cell" type="Node2D" unique_id=189524571 node_paths=PackedStringArray("road", "overlay")]
+[sub_resource type="Animation" id="Animation_et66a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Destination:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_eonhc"]
+resource_name = "destination_float"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Destination:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -4)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vy3ve"]
+_data = {
+&"RESET": SubResource("Animation_et66a"),
+&"destination_float": SubResource("Animation_eonhc")
+}
+
+[node name="Cell" type="Node2D" unique_id=189524571 node_paths=PackedStringArray("road", "destination_marker", "destination_player")]
 script = ExtResource("1_1k0kq")
 road = NodePath("Road")
-overlay = NodePath("Overlay")
-collectible_scene = ExtResource("2_7lt42")
+destination_marker = NodePath("Destination/Destination")
+destination_player = NodePath("Destination/Destination/AnimationPlayer")
 
 [node name="Road" type="Sprite2D" parent="." unique_id=82527359]
+texture = ExtResource("3_7lt42")
 
-[node name="Overlay" type="Sprite2D" parent="." unique_id=1621617596]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_5qxn4")
+[node name="Destination" type="Node2D" parent="." unique_id=445688538]
+scale = Vector2(0.35, 0.35)
+
+[node name="Destination" type="Sprite2D" parent="Destination" unique_id=1621617596]
+position = Vector2(0, -128)
+texture = ExtResource("4_7lt42")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Destination/Destination" unique_id=2125056593]
+root_node = NodePath("../../..")
+libraries/ = SubResource("AnimationLibrary_vy3ve")

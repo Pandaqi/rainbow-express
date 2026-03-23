@@ -4,16 +4,15 @@ class_name Cell
 var data : CellData
 
 @export var road : Sprite2D
-@export var overlay : Sprite2D
-
-@export var collectible_scene : PackedScene
+@export var destination_marker : Sprite2D
+@export var destination_player : AnimationPlayer
 
 var road_textures : Dictionary[String, String] = {
-	"XXXX": "tileGrass1.png",
-	"OXXX": "tileGrass2.png", # @TODO: make proper single-connections
-	"XOXX": "tileGrass2.png",
-	"XXOX": "tileGrass2.png",
-	"XXXO": "tileGrass2.png",
+	"XXXX": "",
+	"OXXX": "tileGrass_roadDeadE.png",
+	"XOXX": "tileGrass_roadDeadS.png",
+	"XXOX": "tileGrass_roadDeadW.png",
+	"XXXO": "tileGrass_roadDeadN.png",
 	"XOOX": "tileGrass_roadCornerLL.png",
 	"OOXX": "tileGrass_roadCornerLR.png",
 	"XXOO": "tileGrass_roadCornerUL.png",
@@ -34,26 +33,17 @@ func sync_data(cd:CellData) -> void:
 func refresh() -> void:
 	# road texture
 	var tex_id := get_cell_texture_id(data)
-	road.texture = load("res://map/roads/sprites/" + road_textures[tex_id])
+	if tex_id != "":
+		road.texture = load("res://map/roads/sprites/" + road_textures[tex_id])
 	
-	# truck start/end
-	overlay.set_visible(data.is_start() or data.is_destination())
-	overlay.modulate = PuzzleVisualizer.get_truck_color(data.get_truck_index())
-	
-	# display connections; cells are responsible for the connection to their right or down
-	# (to prevent two cells both drawing the same connection)
-	for connected_cell in data.connection_cells:
-		var connection := data.connection_cells[connected_cell]
-		if not connection.has_pickup(): continue
-		
-		var dir := connected_cell.pos - data.pos
-		var is_right_or_down := dir.x > 0 or dir.y > 0
-		if not is_right_or_down: continue
-		
-		var col : Collectible = collectible_scene.instantiate()
-		col.sync_data(connection)
-		col.set_position(dir * 32.0)
-		add_child(col)
+	# car start/end
+	destination_marker.set_visible(data.is_destination())
+	destination_marker.modulate = Cars.get_car_color(data.get_car_index())
+	if destination_marker.is_visible():
+		destination_player.speed_scale = randf_range(0.8, 1.2)
+		destination_player.play("destination_float")
+	else:
+		destination_player.stop()
 
 func get_cell_neighbor_index(cell:CellData, nb:CellData) -> int:
 	var dir := nb.pos - cell.pos

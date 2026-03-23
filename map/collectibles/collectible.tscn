@@ -1,12 +1,56 @@
 [gd_scene format=3 uid="uid://bq4q6xof5peoa"]
 
 [ext_resource type="Script" uid="uid://de138li7plufk" path="res://map/collectibles/collectible.gd" id="1_kyqja"]
-[ext_resource type="Texture2D" uid="uid://dl8l3vx1j3f48" path="res://icon.svg" id="2_lnx1r"]
+[ext_resource type="Texture2D" uid="uid://bik15cfhs4eqq" path="res://map/collectibles/star-tintable.png" id="2_kyqja"]
 
-[node name="Collectible" type="Node2D" unique_id=2003377765 node_paths=PackedStringArray("sprite")]
+[sub_resource type="Animation" id="Animation_kyqja"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lnx1r"]
+resource_name = "collectible_float"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -4)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cmlxf"]
+_data = {
+&"RESET": SubResource("Animation_kyqja"),
+&"collectible_float": SubResource("Animation_lnx1r")
+}
+
+[node name="Collectible" type="Node2D" unique_id=2003377765 node_paths=PackedStringArray("sprite", "anim_player")]
 script = ExtResource("1_kyqja")
-sprite = NodePath("Sprite2D")
+sprite = NodePath("Container/Sprite2D")
+anim_player = NodePath("AnimationPlayer")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=223099516]
-scale = Vector2(0.125, 0.125)
-texture = ExtResource("2_lnx1r")
+[node name="Container" type="Node2D" parent="." unique_id=1535554576]
+
+[node name="Sprite2D" type="Sprite2D" parent="Container" unique_id=223099516]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_kyqja")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=262493578]
+libraries/ = SubResource("AnimationLibrary_cmlxf")

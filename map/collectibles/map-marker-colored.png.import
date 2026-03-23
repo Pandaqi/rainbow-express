@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnqullgljqrld"
-path="res://.godot/imported/tileGrass_roadCrossingRound.png-bf0cf95b3054ec2af5a380287d71f5c0.ctex"
+uid="uid://ccmngew3eak1l"
+path="res://.godot/imported/map-marker-colored.png-ad467041bce723fc4cbb3904d822efa9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://map/roads/sprites/tileGrass_roadCrossingRound.png"
-dest_files=["res://.godot/imported/tileGrass_roadCrossingRound.png-bf0cf95b3054ec2af5a380287d71f5c0.ctex"]
+source_file="res://map/collectibles/map-marker-colored.png"
+dest_files=["res://.godot/imported/map-marker-colored.png-ad467041bce723fc4cbb3904d822efa9.ctex"]
 
 [params]
 

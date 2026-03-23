@@ -1,20 +1,51 @@
 [gd_scene format=3 uid="uid://b02nxc63s3xiw"]
 
 [ext_resource type="Script" uid="uid://f0nbwr3wo0q6" path="res://main/main.gd" id="1_53q0u"]
+[ext_resource type="Texture2D" uid="uid://l4wxp2fw7jn8" path="res://map/roads/sprites/tileGrass1.png" id="2_grrlh"]
 [ext_resource type="Script" uid="uid://bn5omlirmxlg7" path="res://map/puzzle_visualizer.gd" id="2_pjrb6"]
 [ext_resource type="PackedScene" uid="uid://b4vvqaj813jdt" path="res://map/roads/cell.tscn" id="3_xwkvk"]
+[ext_resource type="PackedScene" uid="uid://bds60uq0a0gjv" path="res://map/cars/car.tscn" id="4_3wy1v"]
+[ext_resource type="Script" uid="uid://dxxw4swmkgmp4" path="res://map/collectibles/collectibles.gd" id="4_4dugh"]
 [ext_resource type="Script" uid="uid://yajecyq1fscv" path="res://map/debug_visualizer.gd" id="4_c651c"]
+[ext_resource type="PackedScene" uid="uid://bq4q6xof5peoa" path="res://map/collectibles/collectible.tscn" id="5_67ri8"]
+[ext_resource type="Script" uid="uid://cr012lhf5fn3m" path="res://map/cars/cars.gd" id="5_kfbq2"]
 
 [node name="Main" type="Node2D" unique_id=1442810541 node_paths=PackedStringArray("vis")]
 script = ExtResource("1_53q0u")
 vis = NodePath("PuzzleVisualizer")
 
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("debug_visualizer")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=488339698]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1820895578]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_grrlh")
+stretch_mode = 1
+
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "cars", "collectibles", "debug_visualizer")]
 position = Vector2(128, 128)
 script = ExtResource("2_pjrb6")
 cell_scene = ExtResource("3_xwkvk")
+map_container = NodePath("Map")
+cars = NodePath("Cars")
+collectibles = NodePath("Collectibles")
 debug_visualizer = NodePath("DebugVisualizer")
 
+[node name="Map" type="Node2D" parent="PuzzleVisualizer" unique_id=2144313273]
+
 [node name="DebugVisualizer" type="Node2D" parent="PuzzleVisualizer" unique_id=1660398026]
-z_index = 128
 script = ExtResource("4_c651c")
+
+[node name="Collectibles" type="Node2D" parent="PuzzleVisualizer" unique_id=1375601843]
+script = ExtResource("4_4dugh")
+collectible_scene = ExtResource("5_67ri8")
+
+[node name="Cars" type="Node2D" parent="PuzzleVisualizer" unique_id=2115600352]
+y_sort_enabled = true
+script = ExtResource("5_kfbq2")
+car_scene = ExtResource("4_3wy1v")

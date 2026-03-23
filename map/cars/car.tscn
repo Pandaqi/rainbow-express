@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bds60uq0a0gjv"]
+
+[ext_resource type="Script" uid="uid://bhwxnmoinvvig" path="res://map/cars/car.gd" id="1_fhmlo"]
+[ext_resource type="Texture2D" uid="uid://b4xovobjt8ive" path="res://map/cars/car-spritesheet.png" id="2_0vmut"]
+
+[node name="Car" type="Node2D" unique_id=377084491 node_paths=PackedStringArray("base", "overlay")]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_fhmlo")
+base = NodePath("Base")
+overlay = NodePath("Overlay")
+
+[node name="Base" type="Sprite2D" parent="." unique_id=1879686021]
+position = Vector2(0, -52)
+texture = ExtResource("2_0vmut")
+hframes = 4
+vframes = 2
+
+[node name="Overlay" type="Sprite2D" parent="." unique_id=1118538378]
+position = Vector2(0, -52)
+texture = ExtResource("2_0vmut")
+hframes = 4
+vframes = 2
+frame = 4
