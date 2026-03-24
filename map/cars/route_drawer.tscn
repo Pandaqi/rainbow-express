@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bkmfl25kwdop2"]
+
+[ext_resource type="Script" uid="uid://ddub7sm1s15nr" path="res://map/cars/route_drawer.gd" id="1_isvcg"]
+
+[node name="RouteDrawer" type="Node2D" unique_id=1063119033]
+script = ExtResource("1_isvcg")

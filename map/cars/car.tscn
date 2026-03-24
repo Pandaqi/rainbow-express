@@ -2,22 +2,148 @@
 
 [ext_resource type="Script" uid="uid://bhwxnmoinvvig" path="res://map/cars/car.gd" id="1_fhmlo"]
 [ext_resource type="Texture2D" uid="uid://b4xovobjt8ive" path="res://map/cars/car-spritesheet.png" id="2_0vmut"]
+[ext_resource type="AudioStream" uid="uid://jeqo47gnme77" path="res://map/cars/truck-move.mp3" id="2_lhtcl"]
+[ext_resource type="AudioStream" uid="uid://8tkk8ev5xcux" path="res://map/cars/switch-truck.mp3" id="3_6bqmj"]
+[ext_resource type="Texture2D" uid="uid://dqvnqgw1i153j" path="res://map/cars/car_shadow.png" id="4_6bqmj"]
+[ext_resource type="Texture2D" uid="uid://bik15cfhs4eqq" path="res://map/collectibles/star-tintable.png" id="5_7ldhx"]
+[ext_resource type="Script" uid="uid://pjegiq1mxysh" path="res://map/cars/particles.gd" id="5_wbadm"]
 
-[node name="Car" type="Node2D" unique_id=377084491 node_paths=PackedStringArray("base", "overlay")]
+[sub_resource type="Curve" id="Curve_wbadm"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.220339, 0.98214895), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.9123579, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_0d51w"]
+colors = PackedColorArray(1, 1, 1, 0.5176471, 1, 1, 1, 0)
+
+[sub_resource type="Animation" id="Animation_fhmlo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_0vmut"]
+resource_name = "idle_car"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("SpritesContainer:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.56666666, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.05, 0.95), Vector2(0.95, 1.05), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lhtcl"]
+_data = {
+&"RESET": SubResource("Animation_fhmlo"),
+&"idle_car": SubResource("Animation_0vmut")
+}
+
+[node name="Car" type="Node2D" unique_id=377084491 node_paths=PackedStringArray("base", "overlay", "outline", "shadow_h", "shadow_v", "anim_player", "particles", "audio_drive", "audio_switch", "audio_arrived")]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_fhmlo")
-base = NodePath("Base")
-overlay = NodePath("Overlay")
+base = NodePath("SpritesContainer/Base")
+overlay = NodePath("SpritesContainer/Overlay")
+outline = NodePath("SpritesContainer/Outline")
+shadow_h = NodePath("ShadowHorizontal")
+shadow_v = NodePath("ShadowVertical")
+anim_player = NodePath("AnimationPlayer")
+particles = NodePath("Particles")
+audio_drive = NodePath("AudioDrive")
+audio_switch = NodePath("AudioSwitch")
+audio_arrived = NodePath("AudioArrived")
 
-[node name="Base" type="Sprite2D" parent="." unique_id=1879686021]
+[node name="AudioDrive" type="AudioStreamPlayer2D" parent="." unique_id=403637523]
+stream = ExtResource("2_lhtcl")
+volume_db = -9.0
+
+[node name="AudioSwitch" type="AudioStreamPlayer2D" parent="." unique_id=600840972]
+stream = ExtResource("3_6bqmj")
+volume_db = -6.0
+
+[node name="AudioArrived" type="AudioStreamPlayer2D" parent="." unique_id=534479304]
+
+[node name="ShadowHorizontal" type="Sprite2D" parent="." unique_id=1357111979]
+modulate = Color(1, 1, 1, 0.4392157)
+position = Vector2(0, 14)
+scale = Vector2(1.328125, 0.375)
+texture = ExtResource("4_6bqmj")
+
+[node name="ShadowVertical" type="Sprite2D" parent="." unique_id=739058090]
+modulate = Color(1, 1, 1, 0.4392157)
+position = Vector2(0, 7.999996)
+scale = Vector2(0.78125006, 0.68749994)
+texture = ExtResource("4_6bqmj")
+
+[node name="Particles" type="Node2D" parent="." unique_id=248512296 node_paths=PackedStringArray("particles", "anchors")]
+script = ExtResource("5_wbadm")
+particles = NodePath("ParticlesExhaust")
+anchors = [NodePath("Anchor0"), NodePath("Anchor1"), NodePath("Anchor2"), NodePath("Anchor3")]
+
+[node name="ParticlesExhaust" type="CPUParticles2D" parent="Particles" unique_id=731653759]
+position = Vector2(-118, -8)
+texture = ExtResource("5_7ldhx")
+lifetime = 0.85
+direction = Vector2(0, -1)
+spread = 10.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 150.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.15
+scale_amount_curve = SubResource("Curve_wbadm")
+color_ramp = SubResource("Gradient_0d51w")
+
+[node name="Anchor0" type="Node2D" parent="Particles" unique_id=320547255]
+position = Vector2(-116, 0)
+
+[node name="Anchor1" type="Node2D" parent="Particles" unique_id=2089739445]
+position = Vector2(0, -74)
+
+[node name="Anchor2" type="Node2D" parent="Particles" unique_id=1747679233]
+position = Vector2(112, 0)
+
+[node name="Anchor3" type="Node2D" parent="Particles" unique_id=1325343206]
+position = Vector2(0, 14)
+
+[node name="SpritesContainer" type="Node2D" parent="." unique_id=2085925321]
+
+[node name="Base" type="Sprite2D" parent="SpritesContainer" unique_id=1879686021]
 position = Vector2(0, -52)
 texture = ExtResource("2_0vmut")
 hframes = 4
-vframes = 2
+vframes = 3
+frame = 3
 
-[node name="Overlay" type="Sprite2D" parent="." unique_id=1118538378]
+[node name="Overlay" type="Sprite2D" parent="SpritesContainer" unique_id=1118538378]
 position = Vector2(0, -52)
 texture = ExtResource("2_0vmut")
 hframes = 4
-vframes = 2
+vframes = 3
 frame = 4
+
+[node name="Outline" type="Sprite2D" parent="SpritesContainer" unique_id=1694733040]
+position = Vector2(0, -52)
+texture = ExtResource("2_0vmut")
+hframes = 4
+vframes = 3
+frame = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=82789555]
+libraries/ = SubResource("AnimationLibrary_lhtcl")

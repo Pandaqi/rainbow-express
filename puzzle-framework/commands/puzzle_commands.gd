@@ -35,12 +35,13 @@ func execute_command(cmd:PuzzleCommand) -> void:
 	busy = true
 	
 	register_command(cmd)
-	cmd.do(self)
+	await cmd.do(self)
 	
 	busy = false
 
 func undo_last_turn() -> void:
 	if not has_turns(): return
+	if is_busy(): return
 	
 	busy = true
 	
@@ -48,7 +49,7 @@ func undo_last_turn() -> void:
 	commands.reverse()
 	
 	for cmd in commands:
-		cmd.undo(self)
+		await cmd.undo(self)
 	
 	delete_last_turn()
 	busy = false

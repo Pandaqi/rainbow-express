@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://b4qwv8fxq3e14"]
+
+[ext_resource type="Script" uid="uid://c26gnm1vsffdx" path="res://map/decoration/decoration.gd" id="1_7l7ls"]
+[ext_resource type="Texture2D" uid="uid://dqvnqgw1i153j" path="res://map/cars/car_shadow.png" id="2_634au"]
+[ext_resource type="Texture2D" uid="uid://cxynce74btgo3" path="res://map/decoration/trees-spritesheet.png" id="2_fhmrd"]
+[ext_resource type="Texture2D" uid="uid://duiehuu5kjm51" path="res://map/decoration/flowers-spritesheet.png" id="3_fhmrd"]
+
+[node name="Decoration" type="Node2D" unique_id=1024112401 node_paths=PackedStringArray("sprite_trees", "sprite_flowers")]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_7l7ls")
+sprite_trees = NodePath("SpriteTrees")
+sprite_flowers = NodePath("SpriteFlowers")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=516359774]
+modulate = Color(1, 1, 1, 0.28235295)
+scale = Vector2(0.359375, 0.1875)
+texture = ExtResource("2_634au")
+
+[node name="SpriteTrees" type="Sprite2D" parent="." unique_id=1213602502]
+position = Vector2(0, -120)
+texture = ExtResource("2_fhmrd")
+hframes = 13
+
+[node name="SpriteFlowers" type="Sprite2D" parent="." unique_id=1408897257]
+position = Vector2(0, -108)
+texture = ExtResource("3_fhmrd")
+hframes = 13

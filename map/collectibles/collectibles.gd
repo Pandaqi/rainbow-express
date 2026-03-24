@@ -17,7 +17,7 @@ func visualize(vis:PuzzleVisualizer) -> void:
 			var is_right_or_down := dir.x > 0 or dir.y > 0
 			if not is_right_or_down: continue
 			
-			var pos := vis.convert_cell_pos_to_real_pos(cell_data.pos) + dir * 0.5 * vis.cell_size
+			var pos := PuzzleVisualizer.convert_cell_pos_to_real_pos(cell_data.pos) + dir * 0.5 * vis.cell_size
 			
 			var col : Collectible = collectible_scene.instantiate()
 			col.sync_data(connection)

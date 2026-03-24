@@ -1,8 +1,13 @@
 class_name PathfinderRandom
 
 var cells_visited : Array[PuzzleCell]
-var avoid_touching := false
 var path : Array[PuzzleCell]
+
+## Forbid paths from going straight past their old cells
+var avoid_touching := false
+
+## A function that should return TRUE if the connection is allowed, FALSE if not
+var validity_callback : Callable
 
 func is_valid() -> bool:
 	return path.size() > 0
@@ -38,6 +43,7 @@ func find(start_cell:PuzzleCell, path_length:int) -> Array[PuzzleCell]:
 func extend_path(remaining_length:int, cell_start: PuzzleCell, cell_end: PuzzleCell) -> Array[PuzzleCell]:
 	if is_already_visited(cell_end): return []
 	if cell_start.has_connection_to(cell_end): return []
+	if validity_callback and not validity_callback.call(cell_start, cell_end, remaining_length): return []
 	
 	# avoid touching already visited squares (if we're grid-based, not graph-based)
 	if avoid_touching:

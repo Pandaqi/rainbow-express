@@ -8,7 +8,19 @@
 [ext_resource type="Script" uid="uid://dxxw4swmkgmp4" path="res://map/collectibles/collectibles.gd" id="4_4dugh"]
 [ext_resource type="Script" uid="uid://yajecyq1fscv" path="res://map/debug_visualizer.gd" id="4_c651c"]
 [ext_resource type="PackedScene" uid="uid://bq4q6xof5peoa" path="res://map/collectibles/collectible.tscn" id="5_67ri8"]
+[ext_resource type="Shader" uid="uid://cmjcf7gnya5al" path="res://map/roads/grid_overlay.gdshader" id="5_bsumw"]
 [ext_resource type="Script" uid="uid://cr012lhf5fn3m" path="res://map/cars/cars.gd" id="5_kfbq2"]
+[ext_resource type="PackedScene" uid="uid://b4qwv8fxq3e14" path="res://map/decoration/decoration.tscn" id="5_na0o7"]
+[ext_resource type="Texture2D" uid="uid://eixfpi7vfu26" path="res://map/roads/white-square.png" id="6_fwcvl"]
+[ext_resource type="Script" uid="uid://1u556m6hdbds" path="res://map/roads/grid.gd" id="7_fwcvl"]
+[ext_resource type="PackedScene" uid="uid://bkmfl25kwdop2" path="res://map/cars/route_drawer.tscn" id="14_73k8k"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fwcvl"]
+shader = ExtResource("5_bsumw")
+shader_parameter/size = Vector2(1280, 1280)
+shader_parameter/line_width = 0.0250000011875
+shader_parameter/offset = Vector2(64, 64)
+shader_parameter/grid_size = 128.0
 
 [node name="Main" type="Node2D" unique_id=1442810541 node_paths=PackedStringArray("vis")]
 script = ExtResource("1_53q0u")
@@ -27,25 +39,41 @@ mouse_filter = 2
 texture = ExtResource("2_grrlh")
 stretch_mode = 1
 
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "cars", "collectibles", "debug_visualizer")]
-position = Vector2(128, 128)
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "grid_overlay", "cars", "collectibles", "debug_visualizer")]
 script = ExtResource("2_pjrb6")
 cell_scene = ExtResource("3_xwkvk")
 map_container = NodePath("Map")
+grid_overlay = NodePath("Grid")
 cars = NodePath("Cars")
 collectibles = NodePath("Collectibles")
 debug_visualizer = NodePath("DebugVisualizer")
+decoration_scene = ExtResource("5_na0o7")
 
 [node name="Map" type="Node2D" parent="PuzzleVisualizer" unique_id=2144313273]
 
+[node name="Grid" type="Sprite2D" parent="PuzzleVisualizer" unique_id=1091825548]
+material = SubResource("ShaderMaterial_fwcvl")
+texture = ExtResource("6_fwcvl")
+centered = false
+script = ExtResource("7_fwcvl")
+
 [node name="DebugVisualizer" type="Node2D" parent="PuzzleVisualizer" unique_id=1660398026]
 script = ExtResource("4_c651c")
+enabled = false
 
 [node name="Collectibles" type="Node2D" parent="PuzzleVisualizer" unique_id=1375601843]
 script = ExtResource("4_4dugh")
 collectible_scene = ExtResource("5_67ri8")
 
-[node name="Cars" type="Node2D" parent="PuzzleVisualizer" unique_id=2115600352]
+[node name="Routes" type="Node2D" parent="PuzzleVisualizer" unique_id=952084268]
+
+[node name="Cars" type="Node2D" parent="PuzzleVisualizer" unique_id=2115600352 node_paths=PackedStringArray("route_drawer_container")]
 y_sort_enabled = true
 script = ExtResource("5_kfbq2")
 car_scene = ExtResource("4_3wy1v")
+route_drawer_scene = ExtResource("14_73k8k")
+route_drawer_container = NodePath("../Routes")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1524731236]
+position = Vector2(206, 251)
+zoom = Vector2(0.66, 0.66)

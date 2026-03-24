@@ -99,25 +99,3 @@ Until the next devlog,
 
 Pandaqi
 
-
-
-
-
-
-
-
-## To-Do
-
-* GENERATION:
-  * Add those two fixes (ensure roads connected enough)
-* PLAY:
-  * Actually place dynamic trucks + listen to player input
-  * (Add the Commands for do/undo again!)
-  * Check if truck is at DESTINATION -> if so, load next truck
-  * Check if truck passes COLLECTIBLE -> if so, collect
-  * Visualize the line you've taken (in a nicer way than debug draw, dynamic)
-* ASSETS:
-  * Probably want to switch to Racing Pack ones. They have transparent backs + deadends + cars of course
-  * Place some random trees and decorations in empty unused spaces
-* SETTINGS:
-  * Allow switching to "SHAPES" or "NUMBERS" or "LETTERS" or some other thing to match? This is something I probably want in most of my puzzle games, so maybe make this a standard functionality in the framework ...

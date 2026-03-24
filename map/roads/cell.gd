@@ -5,6 +5,7 @@ var data : CellData
 
 @export var road : Sprite2D
 @export var destination_marker : Sprite2D
+@export var destination_marker_ground : Sprite2D
 @export var destination_player : AnimationPlayer
 
 var road_textures : Dictionary[String, String] = {
@@ -28,20 +29,30 @@ var road_textures : Dictionary[String, String] = {
 
 func sync_data(cd:CellData) -> void:
 	data = cd
+	cd.changed.connect(refresh)
 	refresh()
 
 func refresh() -> void:
 	# road texture
 	var tex_id := get_cell_texture_id(data)
-	if tex_id != "":
-		road.texture = load("res://map/roads/sprites/" + road_textures[tex_id])
+	var tex_path := road_textures[tex_id]
+	if tex_path != "":
+		road.texture = load("res://map/roads/sprites/" + tex_path)
 	
-	# car start/end
-	destination_marker.set_visible(data.is_destination())
-	destination_marker.modulate = Cars.get_car_color(data.get_car_index())
-	if destination_marker.is_visible():
+	# car destination
+	var color := Cars.get_car_color(data.get_car_index())
+	var is_dest := data.is_destination()
+	var dest_reached := data.has_been_reached()
+	destination_marker.set_visible(is_dest)
+	destination_marker_ground.set_visible(is_dest)
+	
+	destination_marker.modulate = Color.WHITE if dest_reached else color 
+	destination_marker_ground.modulate = color
+	
+	if is_dest:
+		var anim_key := "destination_disappear" if dest_reached else "destination_float"
 		destination_player.speed_scale = randf_range(0.8, 1.2)
-		destination_player.play("destination_float")
+		destination_player.play(anim_key)
 	else:
 		destination_player.stop()
 
