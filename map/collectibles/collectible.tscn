@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://bq4q6xof5peoa"]
 
 [ext_resource type="Script" uid="uid://de138li7plufk" path="res://map/collectibles/collectible.gd" id="1_kyqja"]
-[ext_resource type="Texture2D" uid="uid://bik15cfhs4eqq" path="res://map/collectibles/star-tintable.png" id="2_kyqja"]
+[ext_resource type="Texture2D" uid="uid://ceul5edwr3yoi" path="res://map/collectibles/star-spritesheet.png" id="2_lnx1r"]
+[ext_resource type="Texture2D" uid="uid://oqoliochwbwv" path="res://map/collectibles/star-outline.png" id="3_cmlxf"]
+[ext_resource type="AudioStream" uid="uid://c22atrntt5mds" path="res://puzzle-framework/game/sfx/positive_1.ogg" id="3_lnx1r"]
 
 [sub_resource type="Animation" id="Animation_kyqja"]
 length = 0.001
@@ -41,8 +43,9 @@ _data = {
 &"collectible_float": SubResource("Animation_lnx1r")
 }
 
-[node name="Collectible" type="Node2D" unique_id=2003377765 node_paths=PackedStringArray("sprite", "anim_player", "audio_pickup")]
+[node name="Collectible" type="Node2D" unique_id=2003377765 node_paths=PackedStringArray("sprite_container", "sprite", "anim_player", "audio_pickup")]
 script = ExtResource("1_kyqja")
+sprite_container = NodePath("Container")
 sprite = NodePath("Container/Sprite2D")
 anim_player = NodePath("AnimationPlayer")
 audio_pickup = NodePath("AudioPickup")
@@ -51,9 +54,15 @@ audio_pickup = NodePath("AudioPickup")
 
 [node name="Sprite2D" type="Sprite2D" parent="Container" unique_id=223099516]
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_kyqja")
+texture = ExtResource("2_lnx1r")
+hframes = 2
+
+[node name="Outline" type="Sprite2D" parent="Container" unique_id=1310413689]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_cmlxf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=262493578]
 libraries/ = SubResource("AnimationLibrary_cmlxf")
 
 [node name="AudioPickup" type="AudioStreamPlayer2D" parent="." unique_id=2049587465]
+stream = ExtResource("3_lnx1r")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnq4ksagd41k4"
-path="res://.godot/imported/map-marker-tintable.png-c9df3aa34ec99485aa171efcb69b4a04.ctex"
+uid="uid://d00lfhek03qyj"
+path="res://.godot/imported/slide_horizontal_grey.png-86c054315dbf95635a6f32de46224246.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://map/collectibles/map-marker-tintable.png"
-dest_files=["res://.godot/imported/map-marker-tintable.png-c9df3aa34ec99485aa171efcb69b4a04.ctex"]
+source_file="res://puzzle-framework/ui/sprites/slide_horizontal_grey.png"
+dest_files=["res://.godot/imported/slide_horizontal_grey.png-86c054315dbf95635a6f32de46224246.ctex"]
 
 [params]
 

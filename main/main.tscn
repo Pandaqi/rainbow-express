@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b02nxc63s3xiw"]
 
 [ext_resource type="Script" uid="uid://f0nbwr3wo0q6" path="res://main/main.gd" id="1_53q0u"]
-[ext_resource type="Texture2D" uid="uid://l4wxp2fw7jn8" path="res://map/roads/sprites/tileGrass1.png" id="2_grrlh"]
 [ext_resource type="Script" uid="uid://bn5omlirmxlg7" path="res://map/puzzle_visualizer.gd" id="2_pjrb6"]
+[ext_resource type="PackedScene" uid="uid://cp6aj834yigfa" path="res://map/decoration/background.tscn" id="2_s758e"]
 [ext_resource type="PackedScene" uid="uid://b4vvqaj813jdt" path="res://map/roads/cell.tscn" id="3_xwkvk"]
 [ext_resource type="PackedScene" uid="uid://bds60uq0a0gjv" path="res://map/cars/car.tscn" id="4_3wy1v"]
 [ext_resource type="Script" uid="uid://dxxw4swmkgmp4" path="res://map/collectibles/collectibles.gd" id="4_4dugh"]
@@ -14,6 +14,11 @@
 [ext_resource type="Texture2D" uid="uid://eixfpi7vfu26" path="res://map/roads/white-square.png" id="6_fwcvl"]
 [ext_resource type="Script" uid="uid://1u556m6hdbds" path="res://map/roads/grid.gd" id="7_fwcvl"]
 [ext_resource type="PackedScene" uid="uid://bkmfl25kwdop2" path="res://map/cars/route_drawer.tscn" id="14_73k8k"]
+[ext_resource type="Script" uid="uid://dbytrrwpofh5d" path="res://map/tutorial/tutorial.gd" id="15_4hmqs"]
+[ext_resource type="Script" uid="uid://haho73xq30yv" path="res://puzzle-framework/tools/camera.gd" id="15_5xyti"]
+[ext_resource type="PackedScene" uid="uid://ddww3rpatsax8" path="res://puzzle-framework/tutorial/click-tap-indicator.tscn" id="16_piupu"]
+[ext_resource type="PackedScene" uid="uid://q1jom8bphw8d" path="res://puzzle-framework/gameover/game_over_dialog.tscn" id="16_s758e"]
+[ext_resource type="PackedScene" uid="uid://2xygcypttdo7" path="res://puzzle-framework/game/game_menu.tscn" id="17_4hmqs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fwcvl"]
 shader = ExtResource("5_bsumw")
@@ -26,26 +31,18 @@ shader_parameter/grid_size = 128.0
 script = ExtResource("1_53q0u")
 vis = NodePath("PuzzleVisualizer")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=488339698]
-layer = -1
+[node name="Background" parent="." unique_id=745768680 instance=ExtResource("2_s758e")]
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1820895578]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("2_grrlh")
-stretch_mode = 1
-
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "grid_overlay", "cars", "collectibles", "debug_visualizer")]
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "grid_overlay", "cars", "collectibles", "camera", "game_menu", "tutorial", "debug_visualizer")]
 script = ExtResource("2_pjrb6")
 cell_scene = ExtResource("3_xwkvk")
 map_container = NodePath("Map")
 grid_overlay = NodePath("Grid")
 cars = NodePath("Cars")
 collectibles = NodePath("Collectibles")
+camera = NodePath("../PuzzleCamera")
+game_menu = NodePath("../GameMenu")
+tutorial = NodePath("../Tutorial")
 debug_visualizer = NodePath("DebugVisualizer")
 decoration_scene = ExtResource("5_na0o7")
 
@@ -74,6 +71,19 @@ car_scene = ExtResource("4_3wy1v")
 route_drawer_scene = ExtResource("14_73k8k")
 route_drawer_container = NodePath("../Routes")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1524731236]
-position = Vector2(206, 251)
-zoom = Vector2(0.66, 0.66)
+[node name="Tutorial" type="Node2D" parent="." unique_id=374277862 node_paths=PackedStringArray("indicator")]
+script = ExtResource("15_4hmqs")
+indicator = NodePath("Indicator")
+
+[node name="Indicator" parent="Tutorial" unique_id=1691144296 instance=ExtResource("16_piupu")]
+scale = Vector2(0.5, 0.5)
+
+[node name="PuzzleCamera" type="Camera2D" parent="." unique_id=2135103635]
+script = ExtResource("15_5xyti")
+edge_margin = Vector2(32, 92)
+metadata/_custom_type_script = "uid://haho73xq30yv"
+
+[node name="GameOverDialog" parent="." unique_id=1270097331 instance=ExtResource("16_s758e")]
+
+[node name="GameMenu" parent="." unique_id=950523672 instance=ExtResource("17_4hmqs")]
+allow_undo = true

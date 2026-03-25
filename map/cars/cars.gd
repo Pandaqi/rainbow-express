@@ -12,10 +12,8 @@ var active_index := 0
 signal changed()
 signal finished()
 
-# @TODO: much longer list with more variation -> go through a ColorName enum again??
-static var car_colors : Array[Color] = [Color.BLACK, Color.RED, Color.BLUE, Color.GREEN]
 static func get_car_color(idx:int) -> Color:
-	return car_colors[idx + 1]
+	return Rainbow.colors[idx]
 
 func visualize(vis:PuzzleVisualizer) -> void:
 	var gen := vis.generator
@@ -24,6 +22,7 @@ func visualize(vis:PuzzleVisualizer) -> void:
 		add_child(c)
 		c.set_grid_position(vis.get_cell_for_data(gen.car_starts[i]))
 		c.set_data(get_car_color(i), i, gen.car_num_pickups[i])
+		c.manager = self
 		cars.append(c)
 		
 		var route_drawer : RouteDrawer = route_drawer_scene.instantiate()
@@ -43,6 +42,7 @@ func change_active(dc:int) -> void:
 	active_index += dc
 	changed.emit(active_index)
 	cur_active = get_active_car()
+	
 	if cur_active: cur_active.set_active(true)
 	if is_finished(): finished.emit()
 

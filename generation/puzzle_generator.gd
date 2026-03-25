@@ -5,7 +5,7 @@ var grid : PuzzleGrid
 @export var grid_size := Vector2i(5,5)
 @export var num_cars_bounds := Vector2i(2,3)
 @export var route_length_bounds := Vector2i(7, 8)
-@export var dist_between_pickups := Vector2i(2, 4)
+@export var dist_between_pickups := Vector2i(4, 6)
 @export var allow_collectibles := true
 
 var car_starts : Array[PuzzleCell]
@@ -16,6 +16,7 @@ var car_num_pickups : Array[int]
 var all_connections : Array[Connection]
 
 func generate() -> void:
+	PuzzleSettings.apply_difficulty_properties(self)
 	create_grid()
 	drive_cars()
 	place_collectibles()
@@ -39,7 +40,7 @@ func drive_cars() -> void:
 
 func drive_car() -> void:
 	var pathfinder := PathfinderRandom.new()
-	pathfinder.validity_callback = func(a:CellData, b:CellData, length_remaining:int):
+	pathfinder.validity_callback = func(_a:CellData, b:CellData, length_remaining:int):
 		if length_remaining > 0: return true
 		if b.is_destination(): return false
 		if b.is_start(): return false

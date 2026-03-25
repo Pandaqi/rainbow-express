@@ -20,7 +20,9 @@ func visualize(vis:PuzzleVisualizer) -> void:
 			var pos := PuzzleVisualizer.convert_cell_pos_to_real_pos(cell_data.pos) + dir * 0.5 * vis.cell_size
 			
 			var col : Collectible = collectible_scene.instantiate()
+			add_child(col)
+			
 			col.sync_data(connection)
 			col.set_position(pos)
-			add_child(col)
+			
 			connection_to_collectible[connection] = col

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PuzzleSettingDropdown" format=3 uid="uid://c0typjv4yheid"]
+
+[ext_resource type="Script" uid="uid://cj5qrvnds355q" path="res://puzzle-framework/settings/setting_dropdown.gd" id="1_26cs6"]
+
+[resource]
+script = ExtResource("1_26cs6")
+options = Array[String](["Colors", "Shapes", "Numbers", "Letters"])
+key = "puzzle_mode"
+label = "Puzzle Mode"
+default = "Colors"
+tooltip = "What kind of elements you need to match for every car"
+metadata/_custom_type_script = "uid://cj5qrvnds355q"

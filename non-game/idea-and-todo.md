@@ -1,43 +1,33 @@
 # To-Do
 
-PUZZLE FRAMEWORK:
-* Remember that we extended our GRID (with neighbors, connections, etc), so DO NOT OVERWRITE those files.
-* Then import the final version from Potion Puzzle
 
 GENERATION:
 
 * Find all "crossroads" (grid points with multiple connections from different trucks). If we think there are _too few_, randomly add new connections to unify the network and make the puzzle harder.
   * Find a point on our route that is in the same row/column as some other truck's route. (So, on the same line horizontally or vertically)
   * Now we can create a straight road between the two points. (Create a "connection" between all points in-between, which is just not used by any truck in the solution.)
+  * **Really though it's first about checking if a route intersects with ANY other or is "standalone"**.
 * If our total number of roads ended up rather short (for whatever reason), just add a few random connections.
 
-FEEDBACK / VISUALS:
-
-* Clearly show some ARROW for the direction the game thinks you wanted to move.
-* Show a cross or SAD SMILEY when you try to go in a direction you can't. (So show it over mid point of connections or where the connection WOULD be if it existed.)
-* Maybe show a happy smiley too (permanently?) on cars that have finished correctly.
 
 
+FEEDBACK / VISUALS / FINISHING TOUCHES:
 
-Finishing:
-
-* Sound Effects: => switch to `PuzzleAudio.play_sound_nice` once framework added
-  * Collect SET
-  * Reach destination SET
-  * ERROR SOUND when trying to go out of bounds / no path / already used path
-* Proper camera centering/zooming on level
-* Difficulty Levels (see below)
-* Tutorial
-  * Simply show the indicator in the right direction for the car.
-  * Play audio again? "Tap somewhere to move your car in that direction. Get the car home! Do this by bringing it to the road with the same color."
-* Settings & Stuff
+* Fix `get_car_color` to work with MORE CARS and DIFFERENT PUZZLE MODES => How to cleanly link `car index` to a randomized `type`?? Can we SHUFFLE static variables?
+  * YES YOU CAN, BUT THIS MEANS RETRIES ARE INCONSISTENT BECAUSE YOU'RE STILL SHUFFLING THE SAME ARRAY!
+* GRID OVERLAY -> Why the fuck is it sometimes correct and sometimes not???
+* TUTORIAL AUDIO => "Tap somewhere to move your car in that direction. Get the car home! Its home is the spot with the same color as the car."
+* RECORD AUDIO FOR NUMBERS AND LETTERS (add to shared library for Webshop already)
+* FEEDBACK:
+  * "Oh no! A car already drove there!"
+  * "Oh no! There's no road there!"
 
 
 Stretch Goals:
 
-* Can the line be PRETTIER? Shader? Road stripes?
-* COLLECTIBLES: Make less dark, make prettier / more fitting with the rest
-* DECORATION: Make colors match environment?
+* Allow YOU to decide the ORDER of the cars?
+* Can the line be PRETTIER? Shader? Road stripes? => Some simple noise shader to roughen the edges?
+  * Maybe we need to go through LINE2D for shaders to work?
 * IMPROV: The front/back sides should probably be slightly _smaller_, now they seem huge in comparison to side view.
 * Allow switching to "SHAPES" or "NUMBERS" or "LETTERS" or some other thing to match? This is something I probably want in most of my puzzle games, so maybe make this a standard functionality in the framework ...
 
@@ -95,13 +85,12 @@ Stretch Goals:
   * Allow duplicating the sprite and darkening the BG, to really highlight that one thing?
 * Localization (both text and audio)
 * Feedback:
-  * Rename PuzzleTween to more general PuzzleEffects or something
+  * Rename PuzzleTween to more general PuzzleEffects or something?
   * Add a simple fire-and-forget function for textual feedback and icon feedback
 * Settings =>
-  * Add TOOLTIP again
-  * Create a `PuzzleSettings` static class so I can just do `PuzzleSettings.get_value()` for settings?
-* Commands =>
-  * Move AudioUndo to some other place, so we DON'T need to add Commands as a child each time?
+  * Check TOOLTIP style
+
+
 
 
 @SOURCE: Great website to compress WebM I record for these video games => https://www.xconvert.com/compress-webm

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://cif4uvmaculmt"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_r75cg"]
+
+[resource]
+script = ExtResource("1_r75cg")
+key = "show_grid"
+label = "Show Grid Overlay"
+default = false
+tooltip = "Shows exactly where squares start and end for extra clarity."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

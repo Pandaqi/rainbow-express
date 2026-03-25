@@ -15,12 +15,20 @@ run/main_scene="uid://b02nxc63s3xiw"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="uid://bkeanrdcqa3dn"
 
+[autoload]
+
+PuzzleFramework="*uid://bqhtxrn1r54m3"
+
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[gui]
+
+theme/custom="uid://d0wlrrkq7diyd"
 
 [input]
 

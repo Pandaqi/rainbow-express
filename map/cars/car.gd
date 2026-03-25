@@ -1,6 +1,8 @@
 extends Node2D
 class_name Car
 
+@export var manager : Cars
+
 @export var base : Sprite2D
 @export var overlay : Sprite2D
 @export var outline : Sprite2D
@@ -13,11 +15,20 @@ class_name Car
 
 @export var audio_drive : AudioStreamPlayer2D
 @export var audio_switch : AudioStreamPlayer2D
-@export var audio_arrived : AudioStreamPlayer2D # @TODO: set to progress2 or something
+@export var audio_arrived : AudioStreamPlayer2D
+@export var audio_words : AudioStreamPlayer2D
+
+@export var feedback : Node2D
+@export var feedback_anim_player : AnimationPlayer
+@export var audio_error : AudioStreamPlayer2D
+
+@export var smiley_arrived : Sprite2D
+@export var arrow : Sprite2D
 
 var active := false
 var arrived := false
 var moving := false
+var type := 0 # @TODO: randomly set during generation
 
 var size_inactive := Vector2(0.175, 0.175)
 var size_active := Vector2(0.35, 0.35)
@@ -43,6 +54,7 @@ func set_data(c:Color, idx:int, np:int) -> void:
 	base.modulate = c
 	particles.modulate = c
 	
+	smiley_arrived.hide()
 	set_active(false)
 
 func set_grid_position(cell:Cell) -> void:
@@ -99,9 +111,7 @@ func convert_vec_to_frame(vec:Vector2) -> int:
 func on_position_updated() -> void:
 	moving = true
 	
-	# @TODO: force finish current active tween
-	if tween_movement and tween_movement.is_running():
-		tween_movement.stop()
+	if tween_movement: PuzzleTween.force_tween_completion(tween_movement)
 	
 	var target_pos := get_current_cell().global_position
 	
@@ -115,40 +125,60 @@ func on_position_updated() -> void:
 	shadow_h.set_visible(frame == 0 or frame == 2)
 	shadow_v.set_visible(frame == 1 or frame == 3)
 	
+	# reinforce with an arrow
+	var arrow_offset := 128.0
+	if frame == 1: arrow_offset = 92.0
+	if frame == 3: arrow_offset = 172.0
+	var arrow_pos := arrow_offset * vec
+	arrow.set_position(arrow_pos)
+	arrow.set_rotation(vec.angle())
+	arrow.show()
+	
 	# more effects (such as faster bounciness when moving)
-	audio_drive.play()
+	PuzzleAudio.play_audio_nice(audio_drive)
 	anim_player.speed_scale = randf_range(2.5, 3.2)
 	particles.update_from_car_frame(frame)
 	
 	# tween us going there	
 	var tw := get_tree().create_tween()
-	var dur := 0.5
+	var dur := randf_range(0.3, 0.4)
 	tw.tween_property(self, "position", target_pos, dur)
 	tween_movement = tw
 	await tw.finished
 	
+	arrow.hide()
 	anim_player.speed_scale = randf_range(0.9, 1.1)
 	moving = false
 
 func is_moving() -> bool:
 	return moving
 
+func play_word_reminder() -> void:
+	if not PuzzleSettings.get_value("audio_words"): return
+	var audio_path := Rainbow.get_word_reminder_for(type)
+	if not audio_path: return
+	
+	audio_words.stream = load("res://map/rainbow/sounds/" + audio_path + ".ogg")
+	audio_words.play()
+
 func set_active(ac:bool) -> void:
 	if not active and ac:
-		audio_switch.play()
+		PuzzleAudio.play_audio_nice(audio_switch)
 	
 	active = ac
 	
 	if active:
 		anim_player.play("idle_car")
+		play_word_reminder()
+	elif arrived:
+		anim_player.play("finished_car")
 	else:
 		anim_player.stop()
 	
 	particles.set_active(active)
 	outline.set_visible(active)
 	
-	if tween_scaling and tween_scaling.is_running():
-		tween_scaling.stop()
+	if tween_scaling: PuzzleTween.force_tween_completion(tween_scaling)
 	
 	var new_scale := size_active if active else size_inactive
 	var tw := get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BOUNCE)
@@ -159,8 +189,20 @@ func set_active(ac:bool) -> void:
 func arrive() -> void:
 	arrived = true
 	get_current_cell().data.arrive(index)
-	audio_arrived.play()
+	PuzzleAudio.play_audio_nice(audio_arrived)
+	smiley_arrived.show()
 
 func depart() -> void:
 	get_current_cell().data.depart(index)
 	arrived = false
+	smiley_arrived.hide()
+
+func on_illegal_move(new_pos:Vector2i) -> void:
+	var from_pos_real := global_position
+	var new_pos_real := PuzzleVisualizer.convert_cell_pos_to_real_pos(new_pos)
+	var mid_pos := 0.5 * (from_pos_real + new_pos_real)
+	
+	feedback.set_position(to_local(mid_pos))
+	feedback_anim_player.stop()
+	feedback_anim_player.play("feedback_appear")
+	audio_error.play()

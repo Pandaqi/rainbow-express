@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bqhtxrn1r54m3"]
+
+[ext_resource type="Script" uid="uid://kme3xvun4gc4" path="res://puzzle-framework/puzzle_framework.gd" id="1_57jsw"]
+[ext_resource type="PackedScene" uid="uid://cp6aj834yigfa" path="res://map/decoration/background.tscn" id="2_oyhug"]
+[ext_resource type="Resource" uid="uid://c8iv2rk66gwvm" path="res://generation/difficulties/diff_easiest.tres" id="2_swsbt"]
+[ext_resource type="Script" uid="uid://7a03fervi8xj" path="res://puzzle-framework/puzzle_difficulty.gd" id="3_tgv6f"]
+[ext_resource type="Resource" uid="uid://bmv7r70o4fa6x" path="res://generation/difficulties/diff_easy.tres" id="4_swsbt"]
+[ext_resource type="Resource" uid="uid://d23uj8m3ghmoe" path="res://generation/difficulties/diff_medium.tres" id="5_xffpj"]
+[ext_resource type="Resource" uid="uid://taen730un0aj" path="res://generation/difficulties/diff_hard.tres" id="6_tgv6f"]
+[ext_resource type="Resource" uid="uid://bw7cwk8oi8208" path="res://generation/difficulties/diff_hardest.tres" id="7_qky6c"]
+[ext_resource type="Script" uid="uid://xoy87uum5v5s" path="res://puzzle-framework/settings/setting.gd" id="9_n02j5"]
+[ext_resource type="Resource" uid="uid://b5h75jjc8yjpn" path="res://puzzle-framework/settings/common/setting_fullscreen.tres" id="10_k0h2b"]
+[ext_resource type="Resource" uid="uid://c73mtja0x8ce0" path="res://puzzle-framework/settings/common/setting_tutorial.tres" id="11_w5xje"]
+[ext_resource type="Resource" uid="uid://doyw0pbgpwr17" path="res://puzzle-framework/settings/common/setting_volume_game.tres" id="13_w5ts3"]
+[ext_resource type="Resource" uid="uid://bpx3va84mb70o" path="res://puzzle-framework/settings/common/setting_volume_ui.tres" id="14_rtetl"]
+[ext_resource type="Resource" uid="uid://dxa5oj5a1uj7a" path="res://generation/settings/setting_audio_words.tres" id="14_w5xje"]
+[ext_resource type="Resource" uid="uid://cif4uvmaculmt" path="res://generation/settings/setting_grid.tres" id="15_ftmnh"]
+[ext_resource type="Resource" uid="uid://c0typjv4yheid" path="res://generation/settings/setting_mode.tres" id="16_w5ts3"]
+
+[node name="PuzzleFramework" type="Node" unique_id=835186744]
+script = ExtResource("1_57jsw")
+game_name = "Rainbow Express"
+game_version = "1.5.7"
+game_tagline = "Teaches Directions & Colors / Shapes / Numbers / Letters"
+favicon = "main/rainbow-express-favicon.png"
+menu_scene_custom = ExtResource("2_oyhug")
+difficulties = Array[ExtResource("3_tgv6f")]([ExtResource("2_swsbt"), ExtResource("4_swsbt"), ExtResource("5_xffpj"), ExtResource("6_tgv6f"), ExtResource("7_qky6c")])
+settings = Array[ExtResource("9_n02j5")]([ExtResource("10_k0h2b"), ExtResource("11_w5xje"), ExtResource("13_w5ts3"), ExtResource("14_rtetl"), ExtResource("14_w5xje"), ExtResource("15_ftmnh"), ExtResource("16_w5ts3")])

@@ -8,12 +8,10 @@ func _init(c:Car) -> void:
 
 func do(_cmds:PuzzleCommands) -> bool:
 	car.arrive()
-	var cars : Cars = car.get_parent() # @TODO: pass in directly, this is just for quick coding
-	cars.change_active(+1)
+	car.manager.change_active(+1)
 	return true
 
 func undo(_cmds:PuzzleCommands) -> bool:
+	car.manager.change_active(-1)
 	car.depart()
-	var cars : Cars = car.get_parent() # @TODO: pass in directly, this is just for quick coding
-	cars.change_active(-1)
 	return true

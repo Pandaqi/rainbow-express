@@ -1,6 +1,22 @@
 [gd_scene format=3 uid="uid://bkmfl25kwdop2"]
 
+[ext_resource type="Shader" uid="uid://brum8wdk58e81" path="res://map/cars/route_drawer.gdshader" id="1_508iu"]
 [ext_resource type="Script" uid="uid://ddub7sm1s15nr" path="res://map/cars/route_drawer.gd" id="1_isvcg"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_et4dr"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_f14c4"]
+width = 92
+height = 92
+noise = SubResource("FastNoiseLite_et4dr")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2inob"]
+shader = ExtResource("1_508iu")
+shader_parameter/line_texture = SubResource("NoiseTexture2D_f14c4")
+shader_parameter/line_texture_size = Vector2i(92, 92)
+shader_parameter/speed = 0.0
+
 [node name="RouteDrawer" type="Node2D" unique_id=1063119033]
+material = SubResource("ShaderMaterial_2inob")
 script = ExtResource("1_isvcg")

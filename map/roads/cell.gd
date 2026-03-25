@@ -6,6 +6,7 @@ var data : CellData
 @export var road : Sprite2D
 @export var destination_marker : Sprite2D
 @export var destination_marker_ground : Sprite2D
+@export var destination_marker_outline : Sprite2D
 @export var destination_player : AnimationPlayer
 
 var road_textures : Dictionary[String, String] = {
@@ -43,7 +44,9 @@ func refresh() -> void:
 	var color := Cars.get_car_color(data.get_car_index())
 	var is_dest := data.is_destination()
 	var dest_reached := data.has_been_reached()
+	
 	destination_marker.set_visible(is_dest)
+	destination_marker_outline.set_visible(is_dest)
 	destination_marker_ground.set_visible(is_dest)
 	
 	destination_marker.modulate = Color.WHITE if dest_reached else color 

@@ -16,7 +16,6 @@ func do(cmds:PuzzleCommands) -> bool:
 	await car.set_grid_position(cell)
 	
 	# @TODO: give feedback when not all pickups collected, so player knows what's wrong
-	print(car, car.get_current_cell().data.is_destination_for)
 	if car.is_at_destination() and car.all_pickups_collected():
 		cmds.execute_command(CommandArrive.new(car))
 	

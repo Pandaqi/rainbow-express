@@ -8,7 +8,15 @@ var history : Array = []
 var busy := false
 
 ## You can set this to true while generating because you might want certain things to not happen (rr happen differently) while generating compared to while playing
-var generating := false
+@export var generating := false
+
+## Whether it plays a sound effect upon rewind
+@export var play_audio := false
+
+signal do_started()
+signal do_finished()
+signal undo_started()
+signal undo_finished()
 
 func has_turns() -> bool:
 	return history.size() > 0
@@ -33,10 +41,12 @@ func delete_last_turn() -> void:
 
 func execute_command(cmd:PuzzleCommand) -> void:
 	busy = true
+	do_started.emit()
 	
 	register_command(cmd)
 	await cmd.do(self)
 	
+	do_finished.emit()
 	busy = false
 
 func undo_last_turn() -> void:
@@ -44,6 +54,9 @@ func undo_last_turn() -> void:
 	if is_busy(): return
 	
 	busy = true
+	undo_started.emit()
+	
+	play_undo_audio()
 	
 	var commands : Array[PuzzleCommand] = get_current_turn()
 	commands.reverse()
@@ -52,4 +65,10 @@ func undo_last_turn() -> void:
 		await cmd.undo(self)
 	
 	delete_last_turn()
+	
+	undo_finished.emit()
 	busy = false
+
+func play_undo_audio() -> void:
+	if not play_audio: return
+	PuzzleAudio.play_audio_nice(PuzzleFramework.audio.undo_audio)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://dxa5oj5a1uj7a"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_nhgnt"]
+
+[resource]
+script = ExtResource("1_nhgnt")
+key = "audio_words"
+label = "Audio Word Reminders"
+default = true
+tooltip = "The game says the word for what you're matching (e.g. RED if color)"
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

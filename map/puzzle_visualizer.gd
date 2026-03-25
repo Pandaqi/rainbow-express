@@ -14,6 +14,9 @@ static var cell_size := 128.0
 
 @export var cars : Cars
 @export var collectibles : Collectibles
+@export var camera : PuzzleCamera
+@export var game_menu : PuzzleGameMenu
+@export var tutorial : Tutorial
 
 @export var debug_visualizer : DebugVisualizer
 @export var decoration_scene : PackedScene
@@ -23,7 +26,6 @@ func _ready() -> void:
 
 func visualize(gen:PuzzleGenerator) -> void:
 	generator = gen
-	generator.debug_print_car_routes()
 	visualize_grid()
 	cars.visualize(self)
 	collectibles.visualize(self)
@@ -47,10 +49,9 @@ func visualize_grid() -> void:
 		if cell_data.count_connections() <= 0: 
 			cells_empty.append(cell.data)
 	
-	level_bounds = Rect2(Vector2.ZERO, generator.grid.size * cell_size)
+	level_bounds = Rect2(-Vector2(0.5, 0.5)*cell_size, generator.grid.size * cell_size)
 	grid_overlay.set_bounds(level_bounds)
-	# @TODO: give to PuzzleCamera
-	
+	camera.set_target(level_bounds)
 	visualize_decorations(cells_empty)
 
 func visualize_decorations(cells_allowed:Array[CellData]) -> void:
@@ -133,28 +134,50 @@ func move_active_car_in_direction(dir:Vector2i) -> void:
 	var new_pos := car.grid_pos + dir
 	if generator.grid.is_out_of_bounds(new_pos):
 		print("PuzzleVisualizer | Can't move out of bounds.")
+		car.on_illegal_move(new_pos)
 		return
 	
 	if not generator.connection_exists_between(from_pos, new_pos):
 		print("PuzzleVisualizer | No connection exists here to travel over.")
+		car.on_illegal_move(new_pos)
 		return
 	
 	if generator.overlaps_used_connection(from_pos, new_pos):
 		print("PuzzleVisualizer | Can't overlap a road already traveled by car before.")
+		car.on_illegal_move(new_pos)
 		return
 	
 	# apply that movement
 	var new_cell := get_cell_for_data(generator.grid.get_at(new_pos))
 	commands.start_new_turn()
 	await commands.execute_command(CommandMove.new(car, new_cell))
+	
+	update_tutorial()
+
+func get_next_solution_move() -> Cell:
+	var car := cars.get_active_car()
+	var cur_location := car.get_current_cell()
+	var correct_route := generator.car_routes[car.index]
+	for i in range(correct_route.size()):
+		var were_currently_here : bool = correct_route[i] == cur_location.data
+		if were_currently_here:
+			var next_cell : CellData = correct_route[mini(i + 1, correct_route.size() - 1)]
+			return get_cell_for_data(next_cell)
+	return null
 
 func on_visualization_done() -> void:
 	commands = PuzzleCommands.new()
-	add_child(commands)
-	# @TODO: PuzzleFramework.start_puzzle()
+	game_menu.commands = commands
+	PuzzleFramework.start_puzzle()
+	update_tutorial()
+
+func update_tutorial() -> void:
+	var car := cars.get_active_car()
+	if not car: return
+	tutorial.highlight_move(car, get_next_solution_move())
 
 func _on_cars_finished() -> void:
 	var no_collectibles_left := generator.all_connections.filter(func(c:Connection): return c.has_pickup()).size() <= 0
 	var player_won := no_collectibles_left
 	print("Game Over | Player Won? " + str(player_won))
-	# @TODO: PuzzleFramework.finish_puzzle(player_won)
+	PuzzleFramework.finish_puzzle(player_won)
