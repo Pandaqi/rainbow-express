@@ -1,21 +1,19 @@
-extends Node2D
+extends Line2D
 class_name RouteDrawer
 
 var car : Car
-var line_width := 8.0
-var line_alpha := 0.5
 
 func attach_to_car(c:Car) -> void:
 	car = c
 
 func _process(_dt:float) -> void:
 	if car.is_moving():
-		queue_redraw()
+		refresh()
 
-func _draw() -> void:
-	var color := Cars.get_car_color(car.index)
-	color.a = line_alpha
-	
+func refresh() -> void:
+	var color := Rainbow.get_color_for_type(Cars.get_car_type(car.index))
+	default_color = color
+
 	var positions : PackedVector2Array = []
 	var num_positions := car.route.size()
 	for i in range(num_positions):
@@ -25,7 +23,7 @@ func _draw() -> void:
 		positions.append(pos)
 	
 	if positions.size() < 2: return
-	draw_polyline(convert_to_spline(positions), color, line_width, true)
+	points = convert_to_spline(positions)
 
 func convert_to_spline(_pts: PackedVector2Array, resolution := 10, extrapolate_end_points := true) -> PackedVector2Array:
 	var pts:PackedVector2Array = _pts.duplicate()

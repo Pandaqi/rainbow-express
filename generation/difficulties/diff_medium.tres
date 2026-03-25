@@ -6,7 +6,7 @@
 script = ExtResource("1_sf2im")
 difficulty = 2
 properties = Dictionary[String, Variant]({
-"allow_collectibles": false,
+"allow_collectibles": true,
 "grid_size": Vector2i(5, 5),
 "num_cars_bounds": Vector2i(3, 3),
 "route_length_bounds": Vector2i(4, 8)

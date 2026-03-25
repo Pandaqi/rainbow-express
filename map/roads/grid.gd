@@ -13,6 +13,7 @@ func set_bounds(r:Rect2) -> void:
 	
 	material.set_shader_parameter("size", new_rect.size)
 	material.set_shader_parameter("line_width", line_width)
+	material.set_shader_parameter("offset", Vector2.ZERO)
 	material.set_shader_parameter("grid_size", PuzzleVisualizer.cell_size)
 	
 	set_position(new_rect.position)

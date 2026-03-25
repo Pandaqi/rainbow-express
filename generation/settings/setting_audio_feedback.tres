@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PuzzleSettingCheckbox" format=3 uid="uid://x6pti3nq313"]
+
+[ext_resource type="Script" uid="uid://dhfd6mahjlglv" path="res://puzzle-framework/settings/setting_checkbox.gd" id="1_ns0ef"]
+
+[resource]
+script = ExtResource("1_ns0ef")
+key = "audio_feedback"
+label = "Narrated Feedback (Audio)"
+default = true
+tooltip = "Sound cues explain what you must do or why your move failed."
+metadata/_custom_type_script = "uid://dhfd6mahjlglv"

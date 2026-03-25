@@ -31,7 +31,6 @@ func create_header_node() -> Label:
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.custom_minimum_size = Vector2(128.0, 0)  # @TODO: make this size configurable somehow, pull it out into ALL settings?
-	text.tooltip_text = tooltip
 	text.set_text(label)
 	return text
 

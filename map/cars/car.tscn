@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://d3v8u25xskc3a" path="res://puzzle-framework/game/sfx/error.ogg" id="7_gk1vo"]
 [ext_resource type="Texture2D" uid="uid://dshc0x27a2uma" path="res://puzzle-framework/ui/emojis/beaming-smile.png" id="9_j4cls"]
 [ext_resource type="Texture2D" uid="uid://cqjmu1jpivl0s" path="res://map/cars/arrow.png" id="10_tip77"]
+[ext_resource type="PackedScene" uid="uid://ca6qivcnxhckp" path="res://map/rainbow/puzzle_mode_switcher.tscn" id="11_l4j8p"]
 
 [sub_resource type="Curve" id="Curve_wbadm"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.220339, 0.98214895), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.9123579, 0.0, 0, 0]
@@ -171,9 +172,13 @@ _data = {
 &"idle_car": SubResource("Animation_0vmut")
 }
 
-[node name="Car" type="Node2D" unique_id=377084491 node_paths=PackedStringArray("base", "overlay", "outline", "shadow_h", "shadow_v", "anim_player", "particles", "audio_drive", "audio_switch", "audio_arrived", "audio_words", "feedback", "feedback_anim_player", "audio_error", "smiley_arrived", "arrow")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4j8p"]
+size = Vector2(264, 242)
+
+[node name="Car" type="Node2D" unique_id=377084491 node_paths=PackedStringArray("mode_switcher", "base", "overlay", "outline", "shadow_h", "shadow_v", "anim_player", "particles", "audio_drive", "audio_switch", "audio_arrived", "audio_words", "feedback", "feedback_anim_player", "audio_error", "smiley_arrived", "arrow", "area")]
 scale = Vector2(0.5, 0.5)
 script = ExtResource("1_fhmlo")
+mode_switcher = NodePath("PuzzleModeSwitcher")
 base = NodePath("SpritesContainer/Base")
 overlay = NodePath("SpritesContainer/Overlay")
 outline = NodePath("SpritesContainer/Outline")
@@ -190,6 +195,7 @@ feedback_anim_player = NodePath("Feedback/AnimationPlayer")
 audio_error = NodePath("Feedback/AudioError")
 smiley_arrived = NodePath("SmileyArrived")
 arrow = NodePath("Arrow")
+area = NodePath("Area2D")
 
 [node name="AudioDrive" type="AudioStreamPlayer2D" parent="." unique_id=403637523]
 stream = ExtResource("2_lhtcl")
@@ -204,6 +210,8 @@ stream = ExtResource("4_0d51w")
 volume_db = -5.0
 
 [node name="AudioWords" type="AudioStreamPlayer2D" parent="." unique_id=1548534158]
+volume_db = 3.0
+max_distance = 4000.0
 
 [node name="ShadowHorizontal" type="Sprite2D" parent="." unique_id=1357111979]
 modulate = Color(1, 1, 1, 0.4392157)
@@ -262,7 +270,6 @@ position = Vector2(0, -52)
 texture = ExtResource("2_0vmut")
 hframes = 4
 vframes = 3
-frame = 3
 
 [node name="Overlay" type="Sprite2D" parent="SpritesContainer" unique_id=1118538378]
 position = Vector2(0, -52)
@@ -282,6 +289,10 @@ frame = 4
 position = Vector2(0, -194)
 texture = ExtResource("9_j4cls")
 
+[node name="PuzzleModeSwitcher" parent="." unique_id=1121366073 node_paths=PackedStringArray("recolor_nodes") instance=ExtResource("11_l4j8p")]
+position = Vector2(0, -226)
+recolor_nodes = [NodePath("../SpritesContainer/Base"), NodePath("../Particles")]
+
 [node name="Feedback" type="Node2D" parent="." unique_id=1686889986]
 
 [node name="FeedbackSmiley" type="Sprite2D" parent="Feedback" unique_id=566341064]
@@ -296,3 +307,9 @@ stream = ExtResource("7_gk1vo")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=82789555]
 libraries/ = SubResource("AnimationLibrary_lhtcl")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1310110592]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1639966072]
+position = Vector2(0, -63)
+shape = SubResource("RectangleShape2D_l4j8p")

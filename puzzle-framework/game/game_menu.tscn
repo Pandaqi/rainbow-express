@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bg3okbe3j45a8" path="res://puzzle-framework/ui/buttons/button_undo.tscn" id="4_rs2vk"]
 [ext_resource type="PackedScene" uid="uid://vp1m4bup3jph" path="res://puzzle-framework/ui/buttons/button_next.tscn" id="5_yjix4"]
 
-[node name="GameMenu" type="CanvasLayer" unique_id=950523672 node_paths=PackedStringArray("container", "label_seed", "button_back", "button_restart", "button_undo", "button_next")]
+[node name="GameMenu" type="CanvasLayer" unique_id=950523672 node_paths=PackedStringArray("container", "label_seed", "button_back", "button_restart", "button_undo", "button_next", "label_feedback")]
 script = ExtResource("1_u4vc1")
 container = NodePath("MarginContainer")
 label_seed = NodePath("Seed/Label")
@@ -14,6 +14,7 @@ button_back = NodePath("MarginContainer/VBoxContainer/ButtonBack")
 button_restart = NodePath("MarginContainer/VBoxContainer/ButtonRestart")
 button_undo = NodePath("MarginContainer/VBoxContainer/ButtonUndo")
 button_next = NodePath("MarginContainer/VBoxContainer/ButtonNext")
+label_feedback = NodePath("FeedbackLarge/Label")
 
 [node name="Seed" type="MarginContainer" parent="." unique_id=596682338]
 offset_right = 40.0
@@ -69,3 +70,27 @@ layout_mode = 2
 size_flags_horizontal = 3
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="FeedbackLarge" type="MarginContainer" parent="." unique_id=671432958]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -264.0
+offset_right = 264.0
+offset_bottom = 45.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="FeedbackLarge" unique_id=776617365]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Testestestseteshsehsekhmksehlsemhesmkhlemlhkemkhleklhesmklhsemhkselhsmklhse"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

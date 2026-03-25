@@ -15,6 +15,7 @@ func create_nodes(container:Control) -> void:
 	line_edit.alignment = alignment
 	line_edit.placeholder_text = label
 	line_edit.text_changed.connect(_on_value_changed)
+	line_edit.tooltip_text = tooltip
 	
 	write(value)
 	value = read()

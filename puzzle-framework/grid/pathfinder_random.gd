@@ -9,6 +9,9 @@ var avoid_touching := false
 ## A function that should return TRUE if the connection is allowed, FALSE if not
 var validity_callback : Callable
 
+## A function that should return the neighbors to check, in the order desired
+var neighbors_callback : Callable
+
 func is_valid() -> bool:
 	return path.size() > 0
 
@@ -58,7 +61,11 @@ func extend_path(remaining_length:int, cell_start: PuzzleCell, cell_end: PuzzleC
 	if remaining_length <= 0: return [cell_end]
 	
 	# otherwise, keep searching/recursing deeper
-	for nb in cell_end.get_neighbors_shuffled():
+	var nbs = cell_end.get_neighbors_shuffled()
+	if neighbors_callback:
+		nbs = neighbors_callback.call(cell_end, remaining_length)
+	
+	for nb in nbs:
 		var path_extended := extend_path(remaining_length - 1, cell_end, nb)
 		if path_extended.size() <= 0: continue
 		

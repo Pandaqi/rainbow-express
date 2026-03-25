@@ -8,7 +8,7 @@ var history : Array = []
 var busy := false
 
 ## You can set this to true while generating because you might want certain things to not happen (rr happen differently) while generating compared to while playing
-@export var generating := false
+@export var generating := true
 
 ## Whether it plays a sound effect upon rewind
 @export var play_audio := false
@@ -23,6 +23,10 @@ func has_turns() -> bool:
 
 func is_busy() -> bool:
 	return busy
+
+func prepare_for_play() -> void:
+	play_audio = true
+	generating = false
 
 func get_current_turn() -> Array[PuzzleCommand]:
 	var arr : Array[PuzzleCommand] = []

@@ -71,6 +71,14 @@ This was about an hour of frantic coding, most of it boilerplate (setting up the
 
 If we pick "bad numbers" for this, the algorithm will just find "bad routes" (length 1 or 2) for trucks. The puzzle becomes silly or ugly. But it does not crash or break, which is the worse result.
 
+In the end, I also made some other tweaks to the algorithm to make maps more balanced/consistent.
+
+* Instead of "randomly" adding connections, I calculate the _longest stretch_ I can add. This is usually a long road that connects two parts of the map, or one that leads to the edge of the map. These connections _look best_ and fill up the map nicely, so I sort them and prefer picking these.
+* Conversely, I prefer picking _the shortest possible connection_ when fixing standalone routes. This is, again, because it simply works best with the game. If I connect two separate roads with a long line somewhere at the edge ... this isn't fooling anyone because the roads are still clearly separate. By connecting them with a few close crossroads, they become much more entangled.
+* I only pick roads that go "nowhere" (they lead to the edge of the map and stop; not part of any route) some percentage of the time. Do it too often, and the map is filled with nonsense. Don't do it at all, and the solution becomes obvious because there are no "decoy" routes.
+
+As usual, play with numbers, play some more with numbers, try different approaches, and you slowly get closer to a consistent output :p
+
 ## How to actually play the puzzle?
 
 After generating the puzzle, I give the result to my "visualizing" script.

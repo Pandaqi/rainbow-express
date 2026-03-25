@@ -45,6 +45,7 @@ func create_audio_players() -> void:
 	
 	undo_audio = AudioStreamPlayer.new()
 	add_child(undo_audio)
+	undo_audio.bus = "UI"
 	undo_audio.stream = load("res://puzzle-framework/ui/ui_undo.ogg")
 
 func _on_node_added(node):

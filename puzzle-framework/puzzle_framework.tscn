@@ -16,6 +16,7 @@
 [ext_resource type="Resource" uid="uid://dxa5oj5a1uj7a" path="res://generation/settings/setting_audio_words.tres" id="14_w5xje"]
 [ext_resource type="Resource" uid="uid://cif4uvmaculmt" path="res://generation/settings/setting_grid.tres" id="15_ftmnh"]
 [ext_resource type="Resource" uid="uid://c0typjv4yheid" path="res://generation/settings/setting_mode.tres" id="16_w5ts3"]
+[ext_resource type="Resource" uid="uid://x6pti3nq313" path="res://generation/settings/setting_audio_feedback.tres" id="17_ftmnh"]
 
 [node name="PuzzleFramework" type="Node" unique_id=835186744]
 script = ExtResource("1_57jsw")
@@ -25,4 +26,4 @@ game_tagline = "Teaches Directions & Colors / Shapes / Numbers / Letters"
 favicon = "main/rainbow-express-favicon.png"
 menu_scene_custom = ExtResource("2_oyhug")
 difficulties = Array[ExtResource("3_tgv6f")]([ExtResource("2_swsbt"), ExtResource("4_swsbt"), ExtResource("5_xffpj"), ExtResource("6_tgv6f"), ExtResource("7_qky6c")])
-settings = Array[ExtResource("9_n02j5")]([ExtResource("10_k0h2b"), ExtResource("11_w5xje"), ExtResource("13_w5ts3"), ExtResource("14_rtetl"), ExtResource("14_w5xje"), ExtResource("15_ftmnh"), ExtResource("16_w5ts3")])
+settings = Array[ExtResource("9_n02j5")]([ExtResource("10_k0h2b"), ExtResource("11_w5xje"), ExtResource("13_w5ts3"), ExtResource("14_rtetl"), ExtResource("14_w5xje"), ExtResource("15_ftmnh"), ExtResource("16_w5ts3"), ExtResource("17_ftmnh")])

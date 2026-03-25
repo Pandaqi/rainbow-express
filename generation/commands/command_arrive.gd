@@ -8,10 +8,10 @@ func _init(c:Car) -> void:
 
 func do(_cmds:PuzzleCommands) -> bool:
 	car.arrive()
-	car.manager.change_active(+1)
+	car.manager.on_car_arrived(car)
 	return true
 
 func undo(_cmds:PuzzleCommands) -> bool:
-	car.manager.change_active(-1)
+	car.manager.on_car_departed(car)
 	car.depart()
 	return true

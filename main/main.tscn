@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://ddww3rpatsax8" path="res://puzzle-framework/tutorial/click-tap-indicator.tscn" id="16_piupu"]
 [ext_resource type="PackedScene" uid="uid://q1jom8bphw8d" path="res://puzzle-framework/gameover/game_over_dialog.tscn" id="16_s758e"]
 [ext_resource type="PackedScene" uid="uid://2xygcypttdo7" path="res://puzzle-framework/game/game_menu.tscn" id="17_4hmqs"]
+[ext_resource type="AudioStream" uid="uid://3jocitw1ebmw" path="res://map/tutorial/rainbow-express-tutorial-female.mp3" id="17_q0sk7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fwcvl"]
 shader = ExtResource("5_bsumw")
@@ -33,7 +34,7 @@ vis = NodePath("PuzzleVisualizer")
 
 [node name="Background" parent="." unique_id=745768680 instance=ExtResource("2_s758e")]
 
-[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "grid_overlay", "cars", "collectibles", "camera", "game_menu", "tutorial", "debug_visualizer")]
+[node name="PuzzleVisualizer" type="Node2D" parent="." unique_id=2139419829 node_paths=PackedStringArray("map_container", "grid_overlay", "cars", "collectibles", "camera", "game_menu", "tutorial", "audio_feedback", "debug_visualizer")]
 script = ExtResource("2_pjrb6")
 cell_scene = ExtResource("3_xwkvk")
 map_container = NodePath("Map")
@@ -43,6 +44,7 @@ collectibles = NodePath("Collectibles")
 camera = NodePath("../PuzzleCamera")
 game_menu = NodePath("../GameMenu")
 tutorial = NodePath("../Tutorial")
+audio_feedback = NodePath("AudioFeedback")
 debug_visualizer = NodePath("DebugVisualizer")
 decoration_scene = ExtResource("5_na0o7")
 
@@ -58,11 +60,11 @@ script = ExtResource("7_fwcvl")
 script = ExtResource("4_c651c")
 enabled = false
 
+[node name="Routes" type="Node2D" parent="PuzzleVisualizer" unique_id=952084268]
+
 [node name="Collectibles" type="Node2D" parent="PuzzleVisualizer" unique_id=1375601843]
 script = ExtResource("4_4dugh")
 collectible_scene = ExtResource("5_67ri8")
-
-[node name="Routes" type="Node2D" parent="PuzzleVisualizer" unique_id=952084268]
 
 [node name="Cars" type="Node2D" parent="PuzzleVisualizer" unique_id=2115600352 node_paths=PackedStringArray("route_drawer_container")]
 y_sort_enabled = true
@@ -71,12 +73,18 @@ car_scene = ExtResource("4_3wy1v")
 route_drawer_scene = ExtResource("14_73k8k")
 route_drawer_container = NodePath("../Routes")
 
-[node name="Tutorial" type="Node2D" parent="." unique_id=374277862 node_paths=PackedStringArray("indicator")]
+[node name="AudioFeedback" type="AudioStreamPlayer" parent="PuzzleVisualizer" unique_id=1581431663]
+
+[node name="Tutorial" type="Node2D" parent="." unique_id=374277862 node_paths=PackedStringArray("indicator", "audio_explanation")]
 script = ExtResource("15_4hmqs")
 indicator = NodePath("Indicator")
+audio_explanation = NodePath("AudioExplanation")
 
 [node name="Indicator" parent="Tutorial" unique_id=1691144296 instance=ExtResource("16_piupu")]
 scale = Vector2(0.5, 0.5)
+
+[node name="AudioExplanation" type="AudioStreamPlayer" parent="Tutorial" unique_id=1653082378]
+stream = ExtResource("17_q0sk7")
 
 [node name="PuzzleCamera" type="Camera2D" parent="." unique_id=2135103635]
 script = ExtResource("15_5xyti")

@@ -18,6 +18,8 @@ static var cell_size := 128.0
 @export var game_menu : PuzzleGameMenu
 @export var tutorial : Tutorial
 
+@export var audio_feedback : AudioStreamPlayer
+
 @export var debug_visualizer : DebugVisualizer
 @export var decoration_scene : PackedScene
 
@@ -30,6 +32,7 @@ func visualize(gen:PuzzleGenerator) -> void:
 	cars.visualize(self)
 	collectibles.visualize(self)
 	debug_visualizer.visualize(self)
+	
 	on_visualization_done()
 
 static func convert_cell_pos_to_real_pos(pos:Vector2i) -> Vector2:
@@ -123,6 +126,11 @@ func on_mouse_input_given(pos:Vector2) -> void:
 	
 	move_active_car_in_direction(dir)
 
+func give_audio_feedback(file:String) -> void:
+	if not PuzzleSettings.get_value("audio_feedback"): return
+	audio_feedback.stream = load("res://map/tutorial/" + file + ".mp3")
+	audio_feedback.play()
+
 func move_active_car_in_direction(dir:Vector2i) -> void:
 	if commands.is_busy(): return
 	
@@ -135,22 +143,30 @@ func move_active_car_in_direction(dir:Vector2i) -> void:
 	if generator.grid.is_out_of_bounds(new_pos):
 		print("PuzzleVisualizer | Can't move out of bounds.")
 		car.on_illegal_move(new_pos)
+		give_audio_feedback("tutorial-connection-missing")
 		return
 	
 	if not generator.connection_exists_between(from_pos, new_pos):
 		print("PuzzleVisualizer | No connection exists here to travel over.")
 		car.on_illegal_move(new_pos)
+		give_audio_feedback("tutorial-connection-missing")
 		return
 	
 	if generator.overlaps_used_connection(from_pos, new_pos):
 		print("PuzzleVisualizer | Can't overlap a road already traveled by car before.")
 		car.on_illegal_move(new_pos)
+		give_audio_feedback("tutorial-connection-used")
 		return
 	
 	# apply that movement
 	var new_cell := get_cell_for_data(generator.grid.get_at(new_pos))
 	commands.start_new_turn()
 	await commands.execute_command(CommandMove.new(car, new_cell))
+	
+	# give feedback if we're at destination but not done
+	var at_destination := car.get_current_cell().data.is_destination_for == car.index
+	if at_destination and not car.arrived:
+		give_audio_feedback("tutorial-collectibles-missing")
 	
 	update_tutorial()
 
@@ -167,8 +183,12 @@ func get_next_solution_move() -> Cell:
 
 func on_visualization_done() -> void:
 	commands = PuzzleCommands.new()
+	commands.prepare_for_play()
 	game_menu.commands = commands
+	
 	PuzzleFramework.start_puzzle()
+	if cars.freeform_selection:
+		game_menu.set_feedback("At this difficulty, you select which car you want to move yourself (by clicking it)!")
 	update_tutorial()
 
 func update_tutorial() -> void:

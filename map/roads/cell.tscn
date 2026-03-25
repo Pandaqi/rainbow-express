@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://ddetx6m76yjsi" path="res://map/roads/map-marker-ground.png" id="3_et66a"]
 [ext_resource type="Texture2D" uid="uid://dgx10yhmcsa5o" path="res://map/roads/map-marker-spritesheet.png" id="4_7lt42"]
 [ext_resource type="Texture2D" uid="uid://dfompl4xca418" path="res://map/roads/map-marker-outline.png" id="5_et66a"]
+[ext_resource type="PackedScene" uid="uid://ca6qivcnxhckp" path="res://map/rainbow/puzzle_mode_switcher.tscn" id="6_eonhc"]
 
 [sub_resource type="Animation" id="Animation_et66a"]
 length = 0.001
@@ -193,13 +194,14 @@ _data = {
 &"destination_float": SubResource("Animation_eonhc")
 }
 
-[node name="Cell" type="Node2D" unique_id=189524571 node_paths=PackedStringArray("road", "destination_marker", "destination_marker_ground", "destination_marker_outline", "destination_player")]
+[node name="Cell" type="Node2D" unique_id=189524571 node_paths=PackedStringArray("road", "destination_marker", "destination_marker_ground", "destination_marker_outline", "destination_player", "mode_switcher")]
 script = ExtResource("1_1k0kq")
 road = NodePath("Road")
 destination_marker = NodePath("Destination/Destination")
 destination_marker_ground = NodePath("DestinationMarkerGround")
 destination_marker_outline = NodePath("Destination/Outline")
 destination_player = NodePath("Destination/Destination/AnimationPlayer")
+mode_switcher = NodePath("Destination/Destination/PuzzleModeSwitcher")
 
 [node name="Road" type="Sprite2D" parent="." unique_id=82527359]
 texture = ExtResource("3_7lt42")
@@ -219,6 +221,10 @@ texture = ExtResource("5_et66a")
 position = Vector2(0, -128)
 texture = ExtResource("4_7lt42")
 hframes = 2
+
+[node name="PuzzleModeSwitcher" parent="Destination/Destination" unique_id=1121366073 node_paths=PackedStringArray("recolor_nodes") instance=ExtResource("6_eonhc")]
+position = Vector2(0, -44)
+recolor_nodes = [NodePath(".."), NodePath("../../../DestinationMarkerGround")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Destination/Destination" unique_id=2125056593]
 root_node = NodePath("../../..")

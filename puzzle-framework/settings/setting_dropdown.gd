@@ -8,6 +8,7 @@ var dropdown : OptionButton
 func create_nodes(container:Control) -> void:
 	var subcont := HBoxContainer.new()
 	subcont.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	subcont.tooltip_text = tooltip
 	container.add_child(subcont)
 	
 	dropdown = OptionButton.new()

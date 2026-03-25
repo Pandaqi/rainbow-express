@@ -9,9 +9,15 @@ static func get_difficulty_level() -> PuzzleDifficulty.Difficulty:
 static func get_difficulty_string() -> String:
 	return PuzzleDifficulty.Difficulty.keys()[get_difficulty_level()]
 
+static func get_difficulty_property(key:String) -> Variant:
+	var props := get_difficulty().properties
+	if not (key in props): return null
+	return props[key]
+
 static func apply_difficulty_properties(obj) -> void:
 	var diff := get_difficulty()
 	for key in diff.properties:
+		if not (key in obj): continue
 		obj[key] = diff.properties[key]
 
 static func has_settings() -> bool:

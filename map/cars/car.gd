@@ -3,6 +3,7 @@ class_name Car
 
 @export var manager : Cars
 
+@export var mode_switcher : PuzzleModeSwitcher
 @export var base : Sprite2D
 @export var overlay : Sprite2D
 @export var outline : Sprite2D
@@ -24,11 +25,12 @@ class_name Car
 
 @export var smiley_arrived : Sprite2D
 @export var arrow : Sprite2D
+@export var area : Area2D
 
 var active := false
 var arrived := false
 var moving := false
-var type := 0 # @TODO: randomly set during generation
+var type := 0
 
 var size_inactive := Vector2(0.175, 0.175)
 var size_active := Vector2(0.35, 0.35)
@@ -37,7 +39,6 @@ var tween_scaling : Tween
 var index : int
 var num_pickups_needed : int
 var num_pickups_collected : int
-var color : Color
 var grid_pos := Vector2i(-1,-1)
 var route : Array[Cell] = []
 var route_connections : Array[Connection] = []
@@ -45,14 +46,24 @@ var route_connections : Array[Connection] = []
 var tween_movement : Tween
 
 signal route_changed()
+signal clicked(c:Car)
 
-func set_data(c:Color, idx:int, np:int) -> void:
+func _ready() -> void:
+	area.input_event.connect(_on_input_event)
+
+func _on_input_event(_vp:Node, ev:InputEvent, _sidx:int) -> void:
+	if not (ev is InputEventMouseButton or ev is InputEventScreenTouch): return
+	if not ev.is_released(): return
+	if not PuzzleSettings.get_difficulty_property("car_order_freeform"): return
+	clicked.emit(self)
+
+func set_data(idx:int, tp:int, np:int) -> void:
 	index = idx
+	type = tp
 	num_pickups_needed = np
 	num_pickups_collected = 0
-	color = c
-	base.modulate = c
-	particles.modulate = c
+
+	mode_switcher.update(type)
 	
 	smiley_arrived.hide()
 	set_active(false)
@@ -91,6 +102,9 @@ func unset_last_grid_position() -> void:
 func get_current_cell() -> Cell:
 	if route.size() <= 0: return null
 	return route.back()
+
+func is_at_start() -> bool:
+	return get_current_cell().data.is_start_for == index
 
 func is_at_destination() -> bool:
 	return get_current_cell().data.is_destination_for == index
@@ -158,6 +172,8 @@ func play_word_reminder() -> void:
 	var audio_path := Rainbow.get_word_reminder_for(type)
 	if not audio_path: return
 	
+	# to prevent overlapping with truck switching sound
+	await get_tree().create_timer(0.67).timeout
 	audio_words.stream = load("res://map/rainbow/sounds/" + audio_path + ".ogg")
 	audio_words.play()
 

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://ca6qivcnxhckp"]
+
+[ext_resource type="Script" uid="uid://cd1f2in23uax8" path="res://map/rainbow/puzzle_mode_switcher.gd" id="1_7qvoy"]
+[ext_resource type="Texture2D" uid="uid://cpdj416mbeid0" path="res://map/rainbow/shapes-spritesheet.png" id="2_1x13d"]
+
+[node name="PuzzleModeSwitcher" type="Node2D" unique_id=1121366073 node_paths=PackedStringArray("sprite_shape", "label")]
+script = ExtResource("1_7qvoy")
+sprite_shape = NodePath("SpriteShape")
+label = NodePath("Label")
+
+[node name="SpriteShape" type="Sprite2D" parent="." unique_id=1758777169]
+texture = ExtResource("2_1x13d")
+hframes = 4
+vframes = 3
+
+[node name="Label" type="Label" parent="." unique_id=948634811]
+offset_left = -68.0
+offset_top = -77.0
+offset_right = 72.0
+offset_bottom = 71.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 6
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 128
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1

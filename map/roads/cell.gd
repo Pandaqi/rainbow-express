@@ -8,6 +8,7 @@ var data : CellData
 @export var destination_marker_ground : Sprite2D
 @export var destination_marker_outline : Sprite2D
 @export var destination_player : AnimationPlayer
+@export var mode_switcher : PuzzleModeSwitcher
 
 var road_textures : Dictionary[String, String] = {
 	"XXXX": "",
@@ -41,7 +42,9 @@ func refresh() -> void:
 		road.texture = load("res://map/roads/sprites/" + tex_path)
 	
 	# car destination
-	var color := Cars.get_car_color(data.get_car_index())
+	var type_destination := Cars.get_car_type(data.is_destination_for)
+	mode_switcher.update(type_destination)
+	print("DESTINATION TYPE | " + str(type_destination))
 	var is_dest := data.is_destination()
 	var dest_reached := data.has_been_reached()
 	
@@ -49,8 +52,12 @@ func refresh() -> void:
 	destination_marker_outline.set_visible(is_dest)
 	destination_marker_ground.set_visible(is_dest)
 	
-	destination_marker.modulate = Color.WHITE if dest_reached else color 
-	destination_marker_ground.modulate = color
+	if dest_reached:
+		destination_marker.modulate = Color.WHITE
+	
+	# ugh this transfer is needed to prevent the number/letter/shape modulating too
+	destination_marker.self_modulate = destination_marker.modulate
+	destination_marker.modulate = Color.WHITE
 	
 	if is_dest:
 		var anim_key := "destination_disappear" if dest_reached else "destination_float"

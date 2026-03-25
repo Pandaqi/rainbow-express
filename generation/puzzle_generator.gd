@@ -8,12 +8,16 @@ var grid : PuzzleGrid
 @export var dist_between_pickups := Vector2i(4, 6)
 @export var allow_collectibles := true
 
+var fake_roads_to_map_edge_prob := 0.33
+
 var car_starts : Array[PuzzleCell]
 var car_destinations : Array[PuzzleCell]
 var car_routes : Array[Array]
 var car_routes_connections : Array[Array]
 var car_num_pickups : Array[int]
 var all_connections : Array[Connection]
+
+var extra_connections : Dictionary[CellData, Array]
 
 func generate() -> void:
 	PuzzleSettings.apply_difficulty_properties(self)
@@ -40,11 +44,21 @@ func drive_cars() -> void:
 
 func drive_car() -> void:
 	var pathfinder := PathfinderRandom.new()
+	
+	# don't allow ending at start/end point of another truck
 	pathfinder.validity_callback = func(_a:CellData, b:CellData, length_remaining:int):
 		if length_remaining > 0: return true
 		if b.is_destination(): return false
 		if b.is_start(): return false
 		return true
+	
+	# we prefer going into neighbors with lots of connections to cause crossroads
+	pathfinder.neighbors_callback = func(cell:CellData, length_remaining:int):
+		var nbs := cell.get_neighbors_shuffled()
+		nbs.sort_custom(func(a:CellData, b:CellData): 
+			return a.count_connections() > b.count_connections()
+		)
+		return nbs
 	
 	var desired_length := randi_range(route_length_bounds.x, route_length_bounds.y)
 	
@@ -78,6 +92,10 @@ func drive_car() -> void:
 	
 	# save the end result
 	var car_index := car_routes.size() - 1
+	
+	for cell in path:
+		(cell as CellData).mark_as_correct_route(car_index)
+	
 	car_starts.append(path.front())
 	path.front().mark_as_start(car_index)
 
@@ -89,14 +107,21 @@ func drive_car() -> void:
 	for i in range(0, path.size() - 1):
 		var a := path[i]
 		var b := path[i+1]
-		var connection := Connection.new(a,b)
-		connection.car_index = car_index
-		a.add_connection(connection)
-		b.add_connection(connection)
-		connections.append(connection)
+		var conn := connect_cells(car_index, a, b)
+		connections.append(conn)
 	
 	all_connections += connections
 	car_routes_connections.append(connections)
+
+func connect_cells(car_index:int, a:CellData, b:CellData) -> Connection:
+	if a.has_connection_to(b): return null
+	if b.has_connection_to(a): return null
+	
+	var connection := Connection.new(a,b)
+	connection.car_index = car_index
+	a.add_connection(connection)
+	b.add_connection(connection)
+	return connection
 
 # go through entire car path, determine some positions for pickups + mark destination
 func place_collectibles() -> void:
@@ -115,13 +140,170 @@ func place_collectibles() -> void:
 			next_pickup_index += randi_range(dist_between_pickups.x, dist_between_pickups.y)
 		car_num_pickups.append(total_num_pickups)
 
-# Add some random connections and connecting roads; especially if the cars don't cross anywhere yet
 func clean_up() -> void:
-	var crossroads := get_all_crossroads()
-	var too_unconnected := crossroads.size() <= 0
-	if too_unconnected:
-		pass # @TODO
 	
+	# if we find a route unconnected to anything else
+	# find any connection (along that route) that would attach it to a cell with a DIFFERENT car index
+	clean_up_standalone_routes()
+	
+	# grab all possible extra connections we could make
+	cache_possible_extra_connections()
+	
+	# use them to place some more connections
+	ensure_map_balance()
+	
+	# if routes are connected AND we ensure map balance by adding longest leftout connections, we really don't need this anymore => besides, the `.is_crossroads()` call is a different definition than what I use in this function, so it's meh anyway
+	#ensure_enough_crossroads()
+
+func ensure_map_balance() -> void:
+	var all_extra_paths := []
+	for cell in extra_connections:
+		all_extra_paths += extra_connections[cell]
+	all_extra_paths.sort_custom(func(a,b): return a.size() > b.size())
+	
+	var long_stretch_length := 5 if grid_size.x > 6 else 4
+	while all_extra_paths.size() > 0 and all_extra_paths.front().size() >= long_stretch_length:
+		var path : Array[CellData] = all_extra_paths.pop_front()
+		var goes_to_map_edge : bool = path.back().count_connections() <= 0
+		if goes_to_map_edge and randf() > fake_roads_to_map_edge_prob: continue
+		
+		connect_cells_in_path(path)
+
+func cache_possible_extra_connections():
+	extra_connections = {}
+	for cell in grid.get_cells():
+		if cell.count_connections() <= 0: continue
+		var extra_conns := get_all_extra_connections(cell)
+		if extra_conns.size() <= 0: continue
+		extra_connections[cell as CellData] = extra_conns 
+
+func get_all_extra_connections(cell:CellData) -> Array:
+	var dirs := [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
+	var paths : Array = []
+	for dir in dirs:
+		var path := get_path_to_first_other_cell(-1, cell, dir)
+		if path.size() <= 0: continue
+		paths.append(path)
+	
+	return paths
+
+
+func ensure_enough_crossroads() -> void:
+	var crossroads := get_all_crossroads()
+	var num_cars := count_cars()
+	var crossroads_desired := (num_cars - 1)*2
+	var num_crossroads := crossroads.size()
+	var connected_enough := num_crossroads >= crossroads_desired
+	if connected_enough: return
+	
+	var num_tries := 0
+	var max_tries := 50
+	while num_crossroads < crossroads_desired and num_tries < max_tries:
+		num_tries += 1
+		var rand_car := randi() % num_cars
+		var rand_cell : CellData = car_routes[rand_car].pick_random()
+		var result := connect_cell_into_crossroads(rand_cell)
+		if result: num_crossroads += 1
+
+func clean_up_standalone_routes() -> void:
+	if count_cars() <= 1: return
+	
+	# check if a route is completely standalone
+	# that is, it shares NO cell with another route
+	# if so, MAKE it connected
+	for i in range(car_routes.size()):
+		var my_route := car_routes[i]
+		var is_standalone := true
+		
+		for j in range(car_routes.size()):
+			if i == j: continue
+			var other_route := car_routes[j]
+			for cell_data in my_route:
+				if other_route.has(cell_data):
+					is_standalone = false
+					break
+			if not is_standalone: break
+		
+		if not is_standalone: continue
+		
+		var my_route_shuffled = my_route.duplicate()
+		var num_connections_desired := randi_range(2,2)
+		var num_connections := 0
+		my_route_shuffled.shuffle()
+		for cell_data in my_route_shuffled:
+			var result := connect_cell_straight(i, cell_data)
+			if result: num_connections += 1
+			if num_connections >= num_connections_desired: break
+
+func get_extra_connection(cell_data:CellData, method := "random") -> Array[CellData]:
+	if not (cell_data in extra_connections): return []
+	
+	var arr : Array[CellData] = []
+	if method == "shortest":
+		extra_connections[cell_data].sort_custom(func(a:Array[CellData], b:Array[CellData]): return a.size() < b.size())
+	elif method == "longest":
+		extra_connections[cell_data].sort_custom(func(a:Array[CellData], b:Array[CellData]): return a.size() > b.size())
+	elif method == "random":
+		extra_connections[cell_data].shuffle()
+	
+	arr.assign(extra_connections[cell_data].front())
+	return arr
+
+func connect_cells_in_path(path:Array) -> void:
+	for i in range(path.size() - 1):
+		connect_cells(-1, path[i], path[i+1])
+
+func get_path_to_first_other_cell(car_index:int, cell:CellData, dir:Vector2i) -> Array[CellData]:
+	var current_cell := cell
+	var path : Array[CellData] = [current_cell]
+	while current_cell:
+		var new_pos := current_cell.pos + dir
+		
+		# stop if there's nothing here
+		if grid.is_out_of_bounds(new_pos): 
+			current_cell = null
+			break
+		
+		# save new cell
+		current_cell = grid.get_at(new_pos)
+		path.append(current_cell)
+		
+		# if it has connections, either stop the path if it's another car
+		# OR stop and CLEAR if it's only ourselves, as this is a dead end we don't want to connect to
+		if current_cell.count_connections() > 0:
+			# check if it has seen a car that's not our own => then it must be a new/other connection
+			var not_part_of_any_route := (current_cell.car_indices_seen.size() <= 0)
+			var is_other := current_cell.car_indices_seen.find_custom(func(idx): return idx != car_index) != -1
+			if car_index == -1: is_other = true
+			if not is_other: path = []
+			break
+
+	return path
+
+func connect_cell_straight(car_index:int, cell:CellData) -> bool:
+	var dirs := [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
+	dirs.shuffle()
+	
+	# try directions in random order
+	for dir in dirs:
+		
+		# if we find something to connect to ...
+		var path := get_path_to_first_other_cell(car_index, cell, dir)
+		if path.size() <= 0: continue
+		
+		# ... do so and stop looking
+		for i in range(path.size() - 1):
+			connect_cells(-1, path[i], path[i+1])
+		break
+	
+	return false
+
+func connect_cell_into_crossroads(cell:CellData) -> bool:
+	for nb in cell.get_neighbors():
+		if not cell.has_connection_to(nb):
+			connect_cells(-1, cell, nb)
+	return true
+
 func get_all_crossroads() -> Array[PuzzleCell]:
 	return grid.get_cells().filter(func(c:CellData): return c.is_crossroads())
 

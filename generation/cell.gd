@@ -7,10 +7,13 @@ var is_start_for := -1
 ## Index of the CAR for which this is the destination
 var is_destination_for := -1
 
-## Indices of CARS that have been here
+## Indices of CARS that have been here during generation
+var car_indices_seen : Array[int] = []
+
+## Indices of CARS that have been here (during dynamic play, not generation)
 var part_of_route : Array[int] = []
 
-## Triggers when car reaches it
+## Triggers when car reaches it (during dynamic play, not generation)
 var destination_reached := false
 
 func get_cars_here() -> Array[int]:
@@ -21,6 +24,10 @@ func get_cars_here() -> Array[int]:
 		if car_indices.has(idx): continue
 		car_indices.append(idx)
 	return car_indices
+
+func mark_as_correct_route(idx:int) -> void:
+	if car_indices_seen.has(idx): return
+	car_indices_seen.append(idx)
 
 func is_crossroads() -> bool:
 	return get_cars_here().size() > 1

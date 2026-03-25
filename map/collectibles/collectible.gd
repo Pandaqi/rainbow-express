@@ -6,6 +6,7 @@ var data : Connection
 @export var sprite_container : Node2D
 @export var sprite : Sprite2D
 @export var anim_player : AnimationPlayer
+@export var mode_switcher : PuzzleModeSwitcher
 
 @export var audio_pickup : AudioStreamPlayer2D
 var tween_active : Tween
@@ -31,7 +32,7 @@ func play_appear_animation() -> void:
 	
 	set_visible(true)
 	sprite.set_frame(0)
-	sprite.modulate = Cars.get_car_color(data.pickup_for)
+	mode_switcher.update(Cars.get_car_type(data.pickup_for))
 	tween_active = PuzzleTween.play_popup_tween(sprite_container)
 	await tween_active.finished
 	anim_player.speed_scale = randf_range(0.8, 1.2)

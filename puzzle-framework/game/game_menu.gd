@@ -9,6 +9,8 @@ class_name PuzzleGameMenu
 @export var button_undo : TextureButton
 @export var button_next : TextureButton
 
+@export var label_feedback : Label
+
 @export var allow_back := true
 @export var allow_restart := true
 @export var allow_undo := false
@@ -31,6 +33,7 @@ func _ready() -> void:
 	
 	container.custom_minimum_size.y = size
 	
+	set_feedback("")
 	set_label_text("Difficulty: " + PuzzleSettings.get_difficulty_string() + " | Seed: " + str(PuzzleFramework.puzzle_seed))
 
 	PuzzleFramework.puzzle_done.connect(_on_puzzle_done)
@@ -53,3 +56,6 @@ func _on_button_next_pressed() -> void:
 
 func _on_puzzle_done(_player_won:bool) -> void:
 	queue_free()
+
+func set_feedback(txt:String) -> void:
+	label_feedback.set_text(txt)
