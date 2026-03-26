@@ -333,3 +333,13 @@ func overlaps_used_connection(from_pos:Vector2i, to_pos:Vector2i) -> bool:
 	if conn.was_visited(): return true
 	
 	return false
+
+func get_solution(vis:PuzzleVisualizer) -> Array[PuzzleCommand]:
+	var arr : Array[PuzzleCommand] = []
+	for c in range(count_cars()):
+		var car : Car = vis.cars.cars[c]
+		var route := car_routes[c]
+		for p in range(1, route.size()):
+			var cell := vis.get_cell_for_data(route[p])
+			arr.append(CommandMove.new(car, cell))
+	return arr

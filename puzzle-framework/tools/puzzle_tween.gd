@@ -22,6 +22,14 @@ static func play_wiggle_tween(obj:Node2D, amp_bounds := Vector2(0.02, 0.04)) -> 
 	tw.tween_property(obj, "rotation", 0, 0.25*dur)
 	return tw
 
+# @TODO
+# PuzzleFeedback.TYPE would be some default GOOD/NEUTRAL/BAD
+# feedback_scene would be something that automatically animates itself popping in, fading away, deleting itself
+#static func give_feedback(cont:Node2D, txt:String, type:PuzzleFeedback.Type) -> Node2D:
+	#var fb := feedback_scene.instantiate()
+	#fb.set_data(txt, type)
+	#cont.add_child(fb)
+
 static func force_tween_completion(tw:Tween, dur := 10.0) -> void:
 	if not tw.is_running(): return
 	

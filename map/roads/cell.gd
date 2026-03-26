@@ -44,7 +44,6 @@ func refresh() -> void:
 	# car destination
 	var type_destination := Cars.get_car_type(data.is_destination_for)
 	mode_switcher.update(type_destination)
-	print("DESTINATION TYPE | " + str(type_destination))
 	var is_dest := data.is_destination()
 	var dest_reached := data.has_been_reached()
 	

@@ -89,9 +89,6 @@ func get_cell_for_data(cd:CellData) -> Cell:
 	return null
 
 func _input(ev:InputEvent) -> void:
-	if OS.is_debug_build() and ev.is_action_released("ui_accept"):
-		commands.undo_last_turn()
-	
 	var vec := Vector2i.ZERO
 	if ev.is_action_released("ui_left"): vec = Vector2i.LEFT
 	if ev.is_action_released("ui_right"): vec = Vector2i.RIGHT
@@ -184,7 +181,7 @@ func get_next_solution_move() -> Cell:
 func on_visualization_done() -> void:
 	commands = PuzzleCommands.new()
 	commands.prepare_for_play()
-	game_menu.commands = commands
+	commands.set_solution(generator.get_solution(self))
 	
 	PuzzleFramework.start_puzzle()
 	if cars.freeform_selection:

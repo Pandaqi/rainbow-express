@@ -10,8 +10,15 @@ var busy := false
 ## You can set this to true while generating because you might want certain things to not happen (rr happen differently) while generating compared to while playing
 @export var generating := true
 
-## Whether it plays a sound effect upon rewind
+## Whether it plays a sound effect upon rewind => @TODO: will probably be extended to a more general "trigger (visual) effects or not" in the future
 @export var play_audio := false
+
+## Custom set by the game; the list of commands that represent the solution to the puzzle
+var solution : Array[PuzzleCommand] = []
+
+## Used for tracking where we are when solving solution in sequence;
+## If we allow giving a hint at any moment, we need to manually track the turn number and set it here too
+var solution_index := -1
 
 signal do_started()
 signal do_finished()
@@ -25,6 +32,7 @@ func is_busy() -> bool:
 	return busy
 
 func prepare_for_play() -> void:
+	PuzzleFramework.commands = self
 	play_audio = true
 	generating = false
 
@@ -72,6 +80,24 @@ func undo_last_turn() -> void:
 	
 	undo_finished.emit()
 	busy = false
+
+func set_solution(s:Array[PuzzleCommand]) -> void:
+	solution = s
+	solution_index = -1
+
+func give_next_hint() -> void:
+	if is_busy(): return
+	
+	solution_index += 1
+	if solution_index < 0 or solution_index >= solution.size(): return
+	
+	start_new_turn()
+	await execute_command(solution[solution_index])
+
+func play_full_solution() -> void:
+	solution_index = -1
+	while solution_index < solution.size():
+		await give_next_hint()
 
 func play_undo_audio() -> void:
 	if not play_audio: return

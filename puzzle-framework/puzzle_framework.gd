@@ -23,9 +23,12 @@ var difficulties_by_id : Dictionary[PuzzleDifficulty.Difficulty, PuzzleDifficult
 @export var settings : Array[PuzzleSetting] = []
 var settings_by_id : Dictionary[String, PuzzleSetting] = {}
 
+var commands : PuzzleCommands
+
 var puzzle_seed := 0
 var state := State.MENU
 var audio : PuzzleAudio
+var debug : PuzzleDebug
 var num_attempts := 0
 var num_attempts_same_puzzle := 0
 
@@ -43,6 +46,9 @@ signal puzzle_done(player_won:bool)
 func _enter_tree() -> void:
 	audio = PuzzleAudio.new()
 	add_child(audio)
+	
+	debug = PuzzleDebug.new()
+	add_child(debug)
 	
 	for setting in settings:
 		settings_by_id[setting.key] = setting

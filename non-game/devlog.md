@@ -1,6 +1,6 @@
 # Rainbow Express (Devlog)
 
-Welcome to my developer's diary for my educational puzzle game Rainbow Express. I'll try to explain how it was made, interesting problems faced and lessons learned, and most of all give a fun overview of the process.
+Welcome to my developer's diary for my educational puzzle game [Rainbow Express](https://thewaywardmelody.com/puzzlepages/level-1/maths/video-games/rainbow-express/). I'll try to explain how it was made, interesting problems faced and lessons learned, and most of all give a fun overview of the process.
 
 ## What's the idea?
 

@@ -81,8 +81,9 @@ func on_car_departed(c:Car) -> void:
 		return
 	change_active(-1)
 
-func is_finished() -> bool:
-	return active_index >= cars.size()
+func all_have_finished() -> bool:
+	var cars_finished := cars.filter(func(c:Car): return c.arrived)
+	return cars_finished.size() >= cars.size()
 
 func set_active(idx:int) -> void:
 	change_active(idx - active_index)
@@ -97,11 +98,11 @@ func change_active(dc:int) -> void:
 	cur_active = get_active_car()
 	
 	if cur_active: cur_active.set_active(true)
-	if is_finished(): finished.emit()
+	if all_have_finished(): finished.emit()
 
 func get_active_index() -> int:
 	return clampi(active_index, 0, cars.size() - 1)
 
 func get_active_car() -> Car:
-	if active_index < 0 or is_finished(): return null
+	if active_index < 0 or all_have_finished(): return null
 	return cars[get_active_index()]
